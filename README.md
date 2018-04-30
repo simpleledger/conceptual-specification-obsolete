@@ -54,7 +54,7 @@ There are many useful business cases where only a single person or group is resp
 | 10      | TRANSFER | rid=3,from=3,to=1,qty=1000                            |
 | 11      | VOIDTRAN | bitcointxnid=12345                                    |
 | 12      | TRANSFER | rid=2,from=1,to=3,qty=25                              |
-| 13      | RENAME   | type=resource,id=3,name=BarFoo                        |
+| 13      | RENAME   | type=entity,id=3,name=BarFoo                          |
 
 #### Resulting ledger snapshot/state calculated by a software application
 |         | CompanyABC | XYZ Inc. | Global Inc |
