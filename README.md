@@ -88,12 +88,12 @@ The initial version of SLP designed for simple human readible ledger entries wit
 | TRANSFER   | from=, to=, rid=, qty=,    |  date=               | Move an allocation of resource from one entity to another entity |
 
 ### command arguments with specific byte allocation requirements
-| argument  | max value bytes | value representation |
-|:---------:|:---------------:|:---------------------|
-| slpver=   | 1               | representing up to 128 versions | 
-| date=     | 8               | representing UTC time in seconds for manually set date stamp by user |
-| eid=      | 1               | representing up to 128 identifiable entities in a single ledger |
-| rid=      | 1               | representing up to 128 identifiable resources in a single ledger |
+| argument  | required bytes size | value representation |
+|:---------:|:-------------------:|:---------------------|
+| slpver=   | 1                   | representing up to 128 versions | 
+| date=     | 8                   | representing UTC time in seconds for manually set date stamp by user |
+| eid=      | 1                   | representing up to 128 identifiable entities in a single ledger |
+| rid=      | 1                   | representing up to 128 identifiable resources in a single ledger |
 
 
 ### Hex to be used for checking for collisions between the user's entered values and the arguments that could need to be parsed. This ensures a valid SLP entry
