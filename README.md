@@ -1,4 +1,4 @@
-# Simple Ledger Protocol (SLP) Specificaion DRAFT
+# Simple Ledger Protocol (SLP) Specification DRAFT
 
 The following specification defines a protocol for accounting of quantifiable Resources that will be allocated and transfered between various Entities using a single address on a blockchain. It was originally designed to be used with the bitcoin OP_RETURN opcode as a human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).  
 
