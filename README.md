@@ -1,17 +1,24 @@
-# Simple Ledger Protocol (SLP) Specificaion
+# Simple Ledger Protocol (SLP) Specificaion DRAFT
 
-The following specification defines a protocol for accounting of quantifiable Resources that will be allocated and transfered between various Entities using a single address on a blockchain. It was designed to be used with the bitcoin OP_RETURN opcode as a human readable payload when decoded from bytes to ASCII.  
+The following specification defines a protocol for accounting of quantifiable Resources that will be allocated and transfered between various Entities using a single address on a blockchain. It was originally designed to be used with the bitcoin OP_RETURN opcode as a human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).  
 
 ## Introduction and Purpose
-There are many business cases where only a single person or group is responsible for keeping track of items, but the data is relied on by other entities.  In these cases having an absolute immutable record of historical events may be just as important as the current allocation state.  
+There are many useful business cases where only a single person or group is responsible for keeping track of items, but the data is relied on by other entities.  In these cases having an absolute immutable record of historical events may be just as important as knowing the current allocation state.  For such purposes having a simple protocol for immutable bookkeeping of resources is defined herein.
 
-### Protocol Definitions:
+### Example Use Cases:
+* Company stock ledger
+* Product inventory
+* Loan balance
+
+### Terms Definitions:
 | Term     | Definition                                                                             |
 |----------|----------------------------------------------------------------------------------------|
 | Ledger   | A series of immutable entries with prefixes and fields defined in this protocol        |
 | Resource | A quantifiable item or object (e.g., company shares, products) being held by an entity |
 | Entity   | A person, place, thing or category that resources are allocated to                     |
-| Transfer | Signifies movement of a resource between the defined entities                          |
+| Transfer | Indicate movement of a resource between the defined entities                           |
+| Void     | Indicate a previously made transaction should be ignored in the ledger calculation     |
+| Rename   | Set the current given name of a particular entity or resource                          |
 
 ### Simplest Example SLP Entries on a blockchain (one blockchain data transaction per line):
 
@@ -58,4 +65,4 @@ There are many business cases where only a single person or group is responsible
 Encryption of fields containing sensitive name or quantity data (i.e., name=, qty= fields) is possible using a combination of assymetric keys and symetric keys.  This feature will allow someone to maintain an encrypted ledger with the ability to share only selected transaction data with third-parties using a passcode.
 
 ### Edit and Renaming capibilities
-The protocol provide flexibility for the user by allowing for voiding of resource transfers and renaming of entities and resources so that they can be displayed nicely in the ledger's current state.
+SLP defines voiding of resource transfers and renaming of entities and resources so that they can be displayed nicely in the ledger's current state.
