@@ -6,38 +6,45 @@ The following specification defines a protocol for accounting of quantifiable Re
 There are many business cases where only a single person or group is responsible for keeping track of items, but the data is relied on by other entities.  In these cases having an absolute immutable record of historical events may be just as important as the current allocation state.  
 
 ### Protocol Definitions:
-Ledger -- An immutible series of entries with prefixes defined in this protocol\
-Resource -- A quantifiable item or object (e.g., company shares, products)\
-Entity -- A person, place or thing that resources are allocated to.\
-Transfer -- Moving a resource from one entity to another
+| Term     | Definition                                                                             |
+|----------|----------------------------------------------------------------------------------------|
+| Ledger   | A series of immutable entries with prefixes and fields defined in this protocol        |
+| Resource | A quantifiable item or object (e.g., company shares, products) being held by an entity |
+| Entity   | A person, place, thing or category that resources are allocated to                     |
+| Transfer | Signifies movement of a resource between the defined entities                          |
 
 ### Simplest Example SLP Entries on a blockchain (one blockchain data transaction per line):
 
-LEDGER------version=1,name=ABC Inventory\
-ENTITY------eid=1,name=CompanyABC\
-RESOURCE----rid=1,name=WidgetA,qty=100000,eid=1\
-ENTITY------eid=2,name=XYZ Inc.\
-TRANSFER----rid=1,from=1,to=2,qty=30000
+| Entry # | Command  | Arguments                           |
+|---------|----------|-------------------------------------|
+| 1       | LEDGER   | version=1,name=ABC Inventory        |
+| 2       | ENTITY   | eid=1,name=CompanyABC               |
+| 3       | RESOURCE | rid=1,name=WidgetA,qty=100000,eid=1 |
+| 4       | ENTITY   | eid=2,name=XYZ Inc.                 |
+| 5       | TRANSFER | rid=1,from=1,to=2,qty=30000         |
 
 #### Resulting ledger snapshot/state calculated by software application
+
 |         | CompanyABC | XYZ Inc. |
 |:-------:|:----------:|:--------:|
 | WidgetA |    70000   |   30000  |
 
 ### Advanced Example SLP Entries (multiple resources, voided transactions, and renaming of entities)
 
-LEDGER----version=1\
-ENTITY----eid=1,name=CompanyABC\
-ENTITY----eid=2,name=XYZ Inc.\
-RESOURCE--rid=1,name=WidgetA,qty=100000,eid=1\  
-RESOURCE--rid=2,name=WidgetB,qty=100,eid=1\
-ENTITY----eid=3,name=Global Inc.\
-RESOURCE--rid=3,name=FooBar,qty=6000,eid=3\
-TRANSFER--rid=1,from=1,to=2,qty=30000\
-TRANSFER--rid=3,from=3,to=1,qty=2000          <--(had bitcoin txn=12345)\  
-TRANSFER--rid=3,from=3,to=1,qty=1000\
-VOIDTRAN--bitcointxnid=12345\
-TRANSFER--rid=2,from=1,to=3,qty=25 
+| Entry # | Command  | Arguments                                             |
+|---------|----------|-------------------------------------------------------|
+| 1       | LEDGER   | version=1,name=ABC Inventory                          |
+| 2       | ENTITY   | eid=1,name=CompanyABC                                 |
+| 3       | ENTITY   | eid=2,name=XYZ Inc.                                   |
+| 4       | RESOURCE | rid=1,name=WidgetA,qty=100000,eid=1                   |
+| 5       | RESOURCE | rid=2,name=WidgetB,qty=100,eid=1                      |
+| 6       | ENTITY   | eid=3,name=Global Inc.                                |
+| 7       | RESOURCE | rid=3,name=FooBar,qty=6000,eid=3                      |
+| 8       | TRANSFER | rid=1,from=1,to=2,qty=30000                           |
+| 9       | TRANSFER | rid=3,from=3,to=1,qty=2000 <--(had bitcoin txn=12345) |
+| 10      | TRANSFER | rid=3,from=3,to=1,qty=1000                            |
+| 11      | VOIDTRAN | bitcointxnid=12345                                    |
+| 12      | TRANSFER | rid=2,from=1,to=3,qty=25                              |
 
 #### Resulting ledger snapshot/state calculated by a software application
 |         | CompanyABC | XYZ Inc. | Global Inc |
