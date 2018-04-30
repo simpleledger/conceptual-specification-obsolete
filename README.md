@@ -1,4 +1,4 @@
-# Simple Ledger Protocol (SLP) Specification DRAFT
+# Simple Ledger Protocol (SLP) Specification
 
 The following specification defines a protocol for accounting of Resources to be allocated and transfered between various Entities using a single address on a blockchain. It was originally designed to be used with the bitcoin OP_RETURN opcode as a human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).  
 
@@ -70,7 +70,48 @@ Encryption of fields containing sensitive name or quantity data (i.e., name=, qt
 ### Edit and Renaming capibilities
 SLP defines voiding of resource transfers and renaming of entities and resources so that they can be displayed nicely in the ledger's current state.
 
-## Formal Specification
- 
-TODO
+### Upgrading a ledger's protocol version
+Any ledger utilizing a particular SLP version can change to another SLP version by simply using the LEDGER command again with the desired version specified.  Since the blockchain economics and it's protocol capibilities will change over time it will be important to be able to switch to a different SLP version.  For example, if many ledger entries are being made through an API then transactions may be expensive so a much less verbose SLP protocol will be desired to reduce cost.  Another scenario may be that one protocal version may have more features than another.  For each manually set timestamp is desired with each ledger's entries in order to set an "effective date" which may be included in one protocol that doesn't exist in another.
+
+## SLP Version 0
+
+The initial version of SLP designed for simple human readible ledger entries within 220-bytes
+
+### Commands to be used by a user at a single bitcoin address
+| 8-byte Command Prefix | Required Arguments | Optional Arguments  | Description |
+|:------------------:|:--------------------------:|:--------------------:|:----------------------------------------------|
+| LEDGER     | slpver=          |    name=, date=            | Create a new ledger or change to specified version | 
+| ENTITY     | eid=            |     name=                 | Create a new entity in the ledger                  |
+| RESOURCE   | rid=, qty=, eid=    |     name=            | Create a new resource in the ledger with initial assignment and quantity allowcation |
+| TRANSFER   | from=, to=, rid=, qty=,    |  date=               | Move an allocation of resource from one entity to another entity |
+
+### command arguments with specific byte allocation requirements
+| argument  | max value bytes | value representation |
+|:---------:|:---------------:|:---------------------|
+| slpver=   | 1               | representing up to 128 versions | 
+| date=     | 8               | representing UTC time in seconds for manually set date stamp by user |
+| eid=      | 1               | representing up to 128 identifiable entities in a single ledger |
+| rid=      | 1               | representing up to 128 identifiable resources in a single ledger |
+
+
+### Hex to be used for checking for collisions between the user's entered values and the arguments that could need to be parsed. This ensures a valid SLP entry
+| argument |  hex from ascii |  
+|:--------:|:---------------:|
+| slpver=  | 736c707665723d  |
+| name=    | 6e616d653d      |
+| eid=     | 6569643d        |
+| rid=     | 7269643d        |
+| qty=     | 7174793d        |
+| date=    | 646174653d      |
+| from=    | 66726f6d3d      |
+| to=      | 746f3d          |
+
+### Optional: Commands to be sent from a special address maintained by an implementation of the protocol.
+| 8-byte Command Prefix | Required Arguments | Optional Arguments  | Description |
+|:------------------:|:--------------------------:|:--------------------:|:---------------------------------------------------|
+| SIMPLELEDGER       | version=          |              | Mark in the blockchain when the implementation starts tracking the version indicated
+
+# SLP Version 1 - Future
+
+Include commenting system and encryption.
 
