@@ -16,9 +16,11 @@ There are many useful business cases where only a single person or group is resp
 | Ledger   | A series of immutable entries with prefixes and fields defined in this protocol        |
 | Resource | A quantifiable item or object (e.g., company shares, products) being held by an entity |
 | Entity   | A person, place, thing or category that resources are allocated to                     |
-| Transfer | Indicate movement of a resource between the defined entities                           |
-| Void     | Indicate a previously made transaction should be ignored in the ledger calculation     |
-| Rename   | Set the current given name of a particular entity or resource                          |
+| Transfer | Indicates movement of a resource between the defined entities                          |
+| Void     | Indicates a previously made transaction should be ignored in the ledger calculation    |
+| Rename   | Indicates resetting of the current given name of a particular entity or resource       |
+| Comment  | Indicates a note is being made about a transaction on the blockchain                   |
+| Password | Indicates a password is to be used for certain data fields in a transaction            |
 
 ### Simplest Example SLP Entries on a blockchain (one blockchain data transaction per line):
 
@@ -52,17 +54,18 @@ There are many useful business cases where only a single person or group is resp
 | 10      | TRANSFER | rid=3,from=3,to=1,qty=1000                            |
 | 11      | VOIDTRAN | bitcointxnid=12345                                    |
 | 12      | TRANSFER | rid=2,from=1,to=3,qty=25                              |
+| 13      | RENAME   | type=resource,id=3,name=BarFoo                        |
 
 #### Resulting ledger snapshot/state calculated by a software application
 |         | CompanyABC | XYZ Inc. | Global Inc |
 |:-------:|:----------:|:--------:|:----------:|
 | WidgetA |    70000   |   30000  |      0     |
 | WidgetB |     75     |     0    |     25     |
-|  FooBar |    1000    |     0    |    5000    | 
+|  BarFoo |    1000    |     0    |    5000    | 
 
 
 ### Privacy on a Public Blockchain using Encryption
-Encryption of fields containing sensitive name or quantity data (i.e., name=, qty= fields) is possible using a combination of assymetric keys and symetric keys.  This feature will allow someone to maintain an encrypted ledger with the ability to share only selected transaction data with third-parties using a passcode.
+Encryption of fields containing sensitive name or quantity data (i.e., name=, qty= fields) is possible using a combination of assymetric keys and symetric keys.  This feature will allow someone to maintain an encrypted ledger with the ability to share only selected transaction data with third-parties using a passcode.  Everyone will be able to see the command, but the certain field data can be hidden with a password.
 
 ### Edit and Renaming capibilities
 SLP defines voiding of resource transfers and renaming of entities and resources so that they can be displayed nicely in the ledger's current state.
