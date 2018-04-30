@@ -20,8 +20,9 @@ ENTITY    eid=2,name=XYZ Inc.\
 TRANSFER  rid=1,from=1,to=2,qty=30000
 
 #### Resulting ledger snapshot/state calculated by software application
------------CompanyABC-------XYZ Inc.\
-WidgetA--------70000-----------30000
+|         | CompanyABC | XYZ Inc. |
+|:-------:|:----------:|:--------:|
+| WidgetA |    70000   |   30000  |
 
 ### Advanced Example SLP Entries (multiple resources, voided transactions, and renaming of entities)
 
@@ -39,10 +40,11 @@ VOIDTRAN  bitcointxnid=12345\
 TRANSFER  rid=2,from=1,to=3,qty=25 
 
 #### Resulting ledger snapshot/state calculated by a software application
-------------CompanyABC------XYZ Inc.-----Global Inc.\
-WidgetA-------70000----------30000-----------0\
-WidgetB--------75--------------0------------25\
-FooBar---------1000------------0-----------5000  
+|         | CompanyABC | XYZ Inc. | Global Inc |
+|:-------:|:----------:|:--------:|:----------:|
+| WidgetA |    70000   |   30000  |      0     |
+| WidgetB |     75     |     0    |     25     |
+|  FooBar |    1000    |     0    |    5000    | 
 
 
 ### Privacy on a Public Blockchain using Encryption
