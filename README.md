@@ -106,10 +106,11 @@ The initial version of SLP designed for simple human readible ledger entries wit
 | from=    | 66726f6d3d      |
 | to=      | 746f3d          |
 
-### Optional: Commands to be sent from a special address maintained by an implementation of the protocol.
+### Commands to be sent from a special address maintained by an implementation of the protocol.
 | 8-byte Command Prefix | Required Arguments | Optional Arguments  | Description |
 |:------------------:|:--------------------------:|:--------------------:|:---------------------------------------------------|
-| SIMPLELEDGER       | version=          |              | Mark in the blockchain when the implementation starts tracking the version indicated
+| SIMPLELEDGER       | version=          |              | Mark in the blockchain when the implementation starts accepting the version indicated, sent from implementation address to self |
+| <CUSTOM_NAME> (e.g. TABS.CASH)  | tracking=true           |           | Transaction sent from the implementation address to user's address
 
 # SLP Version 1 - Future
 
