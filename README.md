@@ -69,3 +69,8 @@ Encryption of fields containing sensitive name or quantity data (i.e., name=, qt
 
 ### Edit and Renaming capibilities
 SLP defines voiding of resource transfers and renaming of entities and resources so that they can be displayed nicely in the ledger's current state.
+
+## Formal Specification
+ 
+TODO
+
