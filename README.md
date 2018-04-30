@@ -10,7 +10,7 @@ There are many useful business cases where only a single person or group is resp
 * Product inventory
 * Loan balance
 
-### Terms Definitions:
+### Terms and Definitions:
 | Term     | Definition                                                                             |
 |----------|----------------------------------------------------------------------------------------|
 | Ledger   | A series of immutable entries with prefixes and fields defined in this protocol        |
@@ -19,8 +19,10 @@ There are many useful business cases where only a single person or group is resp
 | Transfer | Indicates movement of a resource between the defined entities                          |
 | Void     | Indicates a previously made transaction should be ignored in the ledger calculation    |
 | Rename   | Indicates resetting of the current given name of a particular entity or resource       |
+| Implementation| The company validating your transactions comply with the SLP protocol (e.g., tabs.cash) |
 | Comment  | Indicates a note is being made about a transaction on the blockchain                   |
 | Password | Indicates a password is to be used for certain data fields in a transaction            |
+
 
 ### Simplest Example SLP Entries on a blockchain (one blockchain data transaction per line):
 
@@ -110,8 +112,12 @@ The initial version of SLP designed for simple human readible ledger entries wit
 | 8-byte Command Prefix | Required Arguments | Optional Arguments  | Description |
 |:------------------:|:--------------------------:|:--------------------:|:---------------------------------------------------|
 | SIMPLELEDGER       | version=          |              | Mark in the blockchain when the implementation starts accepting the version indicated, sent from implementation address to self |
-| <CUSTOM_NAME> (e.g. TABS.CASH)  | tracking=true           |           | Transaction sent from the implementation address to user's address being tracked by the implementation's internal database - acts as a backup incase implementation's database of tracked addresses is lost
+| TRACKEDBY  | url=           |           | Transaction sent from the implementation address to user's address being tracked by the implementation's internal database - acts as a backup incase implementation's database of tracked addresses is lost
 | MESSAGE             | message=                     |      | Error or other message sent from the implementation address to a user's tracked address
+
+### Rules
+1) Address must have a message to self with LEDGER, where everything afterwards would be part of the ledger parsing
+2) After satisfiying the implementation's join requirements the address should have a message received from the implementation to indicate the address is actively being tracked for ledger errors (in case a validation client is not being used)
 
 # SLP Version 1 - Future
 
