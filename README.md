@@ -116,8 +116,8 @@ The initial version of SLP designed for simple human readible ledger entries wit
 | MESSAGE             | message=                     |      | Error or other message sent from the implementation address to a user's tracked address
 
 ### Rules
-1) Address must have a message to self with LEDGER, where everything afterwards would be part of the ledger parsing
-2) After satisfiying the implementation's join requirements the address should have a message received from the implementation to indicate the address is actively being tracked for ledger errors (in case a validation client is not being used).  
+1) After satisfiying the implementation's join requirements the address should have a message received from the implementation to indicate the address is actively being tracked for ledger errors and notifications.
+2) Address must have a message to self with LEDGER, where everything afterwards would be part of the ledger parsing
 
 # SLP Version 1 - Future
 
