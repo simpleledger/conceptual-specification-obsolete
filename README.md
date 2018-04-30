@@ -42,7 +42,7 @@ There are many useful business cases where only a single person or group is resp
 
 | Entry # | Command  | Arguments                                             |
 |---------|----------|-------------------------------------------------------|
-| 1       | LEDGER   | slpver=1,name=ABC Inventory                          |
+| 1       | LEDGER   | slpver=1,name=ABC Inventory                           |
 | 2       | ENTITY   | eid=1,name=CompanyABC                                 |
 | 3       | ENTITY   | eid=2,name=XYZ Inc.                                   |
 | 4       | RESOURCE | rid=1,name=WidgetA,qty=100000,eid=1                   |
@@ -110,9 +110,10 @@ The initial version of SLP designed for simple human readible ledger entries wit
 | 8-byte Command Prefix | Required Arguments | Optional Arguments  | Description |
 |:------------------:|:--------------------------:|:--------------------:|:---------------------------------------------------|
 | SIMPLELEDGER       | version=          |              | Mark in the blockchain when the implementation starts accepting the version indicated, sent from implementation address to self |
-| <CUSTOM_NAME> (e.g. TABS.CASH)  | tracking=true           |           | Transaction sent from the implementation address to user's address
+| <CUSTOM_NAME> (e.g. TABS.CASH)  | tracking=true           |           | Transaction sent from the implementation address to user's address being tracked by the implementation's internal database - acts as a backup incase implementation's database of tracked addresses is lost
+| MESSAGE             | message=                     |      | Error or other message sent from the implementation address to a user's tracked address
 
 # SLP Version 1 - Future
 
-Include commenting system and encryption.
+Include user commenting system and encryption.
 
