@@ -13,36 +13,36 @@ Transfer -- Moving a resource from one entity to another
 
 ### Simplest Example SLP Entries on a blockchain (one blockchain data transaction per line):
 
-LEDGER    version=1,name=ABC Inventory
-ENTITY    eid=1,name=CompanyABC
-RESOURCE  rid=1,name=WidgetA,qty=100000,eid=1
-ENTITY    eid=2,name=XYZ Inc.
-TRANSFER  rid=1,from=1,to=2,qty=30000
+LEDGER    version=1,name=ABC Inventory  
+ENTITY    eid=1,name=CompanyABC  
+RESOURCE  rid=1,name=WidgetA,qty=100000,eid=1  
+ENTITY    eid=2,name=XYZ Inc.  
+TRANSFER  rid=1,from=1,to=2,qty=30000   
 
 #### Resulting ledger snapshot/state calculated by software application
-        CompanyABC     XYZ Inc.
-WidgetA   70000         30000
+        CompanyABC     XYZ Inc.  
+WidgetA   70000         30000  
 
 ### Advanced Example SLP Entries (multiple resources, voided transactions, and renaming of entities)
 
-LEDGER    version=1
-ENTITY    eid=1,name=CompanyABC
-ENTITY    eid=2,name=XYZ Inc.
-RESOURCE  rid=1,name=WidgetA,qty=100000,eid=1
-RESOURCE  rid=2,name=WidgetB,qty=100,eid=1
-ENTITY    eid=3,name=Global Inc.
-RESOURCE  rid=3,name=FooBar,qty=6000,eid=3
-TRANSFER  rid=1,from=1,to=2,qty=30000
-TRANSFER  rid=3,from=3,to=1,qty=2000          <--(had bitcoin txn=12345)
-TRANSFER  rid=3,from=3,to=1,qty=1000
-VOIDTRAN  bitcointxnid=12345
-TRANSFER  rid=2,from=1,to=3,qty=25
+LEDGER    version=1  
+ENTITY    eid=1,name=CompanyABC  
+ENTITY    eid=2,name=XYZ Inc.  
+RESOURCE  rid=1,name=WidgetA,qty=100000,eid=1  
+RESOURCE  rid=2,name=WidgetB,qty=100,eid=1  
+ENTITY    eid=3,name=Global Inc.  
+RESOURCE  rid=3,name=FooBar,qty=6000,eid=3  
+TRANSFER  rid=1,from=1,to=2,qty=30000  
+TRANSFER  rid=3,from=3,to=1,qty=2000          <--(had bitcoin txn=12345)  
+TRANSFER  rid=3,from=3,to=1,qty=1000  
+VOIDTRAN  bitcointxnid=12345  
+TRANSFER  rid=2,from=1,to=3,qty=25  
 
 #### Resulting ledger snapshot/state calculated by a software application
-            CompanyABC    XYZ Inc.    Global Inc.
-WidgetA       70000        30000         0
-WidgetB        75            0           25
-FooBar        1000           0          5000
+            CompanyABC    XYZ Inc.    Global Inc.  
+WidgetA       70000        30000         0  
+WidgetB        75            0           25  
+FooBar        1000           0          5000  
 
 
 ### Privacy on a Public Blockchain using Encryption
