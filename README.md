@@ -26,7 +26,7 @@ There are many useful business cases where only a single person or group is resp
 
 | Entry # | Command  | Arguments                           |
 |---------|----------|-------------------------------------|
-| 1       | LEDGER   | version=1,name=ABC Inventory        |
+| 1       | LEDGER   | slpver=1,name=ABC Inventory        |
 | 2       | ENTITY   | eid=1,name=CompanyABC               |
 | 3       | RESOURCE | rid=1,name=WidgetA,qty=100000,eid=1 |
 | 4       | ENTITY   | eid=2,name=XYZ Inc.                 |
@@ -42,7 +42,7 @@ There are many useful business cases where only a single person or group is resp
 
 | Entry # | Command  | Arguments                                             |
 |---------|----------|-------------------------------------------------------|
-| 1       | LEDGER   | version=1,name=ABC Inventory                          |
+| 1       | LEDGER   | slpver=1,name=ABC Inventory                          |
 | 2       | ENTITY   | eid=1,name=CompanyABC                                 |
 | 3       | ENTITY   | eid=2,name=XYZ Inc.                                   |
 | 4       | RESOURCE | rid=1,name=WidgetA,qty=100000,eid=1                   |
