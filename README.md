@@ -112,12 +112,12 @@ The initial version of SLP designed for simple human readible ledger entries wit
 | 8-byte Command Prefix | Required Arguments | Optional Arguments  | Description |
 |:------------------:|:--------------------------:|:--------------------:|:---------------------------------------------------|
 | SIMPLELEDGER       | version=          |              | Mark in the blockchain when the implementation starts accepting the version indicated, sent from implementation address to self |
-| TRACKEDBY  | url=           |           | Transaction sent from the implementation address to user's address being tracked by the implementation's internal database - acts as a backup incase implementation's database of tracked addresses is lost
+| TRACKEDBY  | url=           |           | Transaction sent from an SLP validation implementation address to user's address being tracked by the implementation's internal database - acts as a backup incase implementation's database of tracked addresses is lost.  Also, an address may be tracked by multiple entities validating the address data against the SLP protocol.
 | MESSAGE             | message=                     |      | Error or other message sent from the implementation address to a user's tracked address
 
 ### Rules
 1) Address must have a message to self with LEDGER, where everything afterwards would be part of the ledger parsing
-2) After satisfiying the implementation's join requirements the address should have a message received from the implementation to indicate the address is actively being tracked for ledger errors (in case a validation client is not being used)
+2) After satisfiying the implementation's join requirements the address should have a message received from the implementation to indicate the address is actively being tracked for ledger errors (in case a validation client is not being used).  
 
 # SLP Version 1 - Future
 
