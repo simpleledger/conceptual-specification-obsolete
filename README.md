@@ -1,14 +1,21 @@
 # Simple Ledger Protocol (SLP) Specification
 
-This specification defines a protocol for accounting of resources to be allocated and transferred between various entities using a single address on a blockchain. It was originally designed to be used with the bitcoin OP_RETURN opcode as a human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).  
+This specification defines a protocol for using a single blockchain address as a ledger for performing accounting and bookkeeping on a blockchain.  Any quantifiable resource allocated between any number of entities can be kept track of using a single blockchain address.  The protocol is designed to be used with the bitcoin OP_RETURN opcode as a human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).
 
 ## Introduction and Purpose
 There are many useful business cases where only a single person or group is responsible for keeping track of items, but the data is relied on by other entities.  In these cases having an absolute immutable record of historical events may be just as important as knowing the current allocation state.  For such purposes having a simple protocol for immutable bookkeeping of resources is defined herein.
 
+An important part of any accounting system is to provide a way to resolve descrepancies and errors that exists within the ledger.  The protocol provides a standard way for a validation service provider to check the state of the ledger and notify the address when errors exist.  Using a validation service provider is not a required part of the protocol, but would be essential feature for any serious ledger.  
+
+An exciting feature of the protocol provides a standardized way to associate entities with blockchain addresses so that bookkeeping can be done on actual balances of an address on the blockchain.  A validation service provider can then compare balances of blockchain addresses to resolve differences between the ledger.
+
 ### Example Use Cases:
-* Company stock ledger
+* Running tabs between roommates 
+* Company's stock ledger
+* Government accounting & bookkeeping
 * Product inventory
 * Loan balance
+* Tracking and bookkeeping of actual bitcoin transactions
 
 ### Terms and Definitions:
 | Term     | Definition                                                                             |
@@ -18,8 +25,8 @@ There are many useful business cases where only a single person or group is resp
 | Entity   | A person, place, thing or category that resources are allocated to                     |
 | Transfer | Indicates movement of a resource between the defined entities                          |
 | Void     | Indicates a previously made transaction should be ignored in the ledger calculation    |
-| Rename   | Indicates resetting of the current given name of a particular entity or resource       |
-| Implementation| The company validating your transactions comply with the SLP protocol (e.g., tabs.cash) |
+| Update   | Indicates updating of field data for a particular entity or resource                   |
+| Implementation| The company validating your transactions comply with the SLP protocol             |
 | Comment  | Indicates a note is being made about a transaction on the blockchain                   |
 | Password | Indicates a password is to be used for certain data fields in a transaction            |
 
@@ -40,7 +47,7 @@ There are many useful business cases where only a single person or group is resp
 |:-------:|:----------:|:--------:|
 | WidgetA |    70000   |   30000  |
 
-### Advanced Example SLP Entries (multiple resources, voided transactions, and renaming of entities)
+### Advanced Example SLP Entries (multiple resources, voided transactions, and updating of entities)
 
 | Entry # | Command  | Arguments                                             |
 |---------|----------|-------------------------------------------------------|
@@ -56,7 +63,7 @@ There are many useful business cases where only a single person or group is resp
 | 10      | TRANSFER | rid=3,from=3,to=1,qty=1000                            |
 | 11      | VOIDTRAN | bitcointxnid=12345                                    |
 | 12      | TRANSFER | rid=2,from=1,to=3,qty=25                              |
-| 13      | RENAME   | type=entity,id=3,name=BarFoo                          |
+| 13      | UPDATE   | type=entity,id=3,name=BarFoo                          |
 
 #### Resulting ledger snapshot/state calculated by a software application
 |         | CompanyABC | XYZ Inc. | Global Inc |
@@ -77,46 +84,55 @@ Any ledger utilizing a particular SLP version can change to another SLP version 
 
 ## SLP Version 0
 
-The initial version of SLP designed for simple human readible ledger entries within 220-bytes
+The initial version of SLP designed for simple human readible ledger entries within 220-bytes.  
 
 ### Commands to be used by a user at a single bitcoin address
+| 8-byte Command Prefix | Required Arguments    | Optional Arguments  | Description                                             |
+|:---------------------:|:---------------------:|:-------------------:|:-----------------------------------------------------|
+| LEDGER                | slpver=               | name=, date=, chain=| Create a new ledger or change to specified version   | 
+| ENTITY                | eid=                  | name=, addr=, chain=| Create a new entity in the ledger                    |
+| RESOURCE              | rid=, qty=, eid=.     | name=               | Create a new resource in the ledger with initial assignment and quantity allowcation |
+| TRANSFER              | from=, to=, rid=, qty=| date=               | Move an allocation of resource from one entity to another entity |
+| UPDATE                | type=, id=,           | name=, addr=, chain=| Update at least one of the optional arguments for an entity, resource, or the ledger |
+
+### Argument requirements
+| Argument          | Type      | Encoding  | Bytes   | Representation                                                      |
+|:-----------------:|:---------:|:---------:|:-------:|:-------------------------------------------------------------------:|
+| slpver=           | number    |  byte     | 1 exact | representing up to 256 versions                                     | 
+| date=             | number    |  bytes    | 4 exact | representing POSIX time manually set date stamp by user             |
+| eid=              | number    |  bytes    | 2 max   | representing up to 65536 possible entity ids in a single ledger     |
+| rid=              | number    |  bytes    | 2 max   | representing up to 65536 possible resource ids in a single ledger   |
+| qty=              | number    |  bytes    | 4 max   | big enough to hold bit                                              |
+| name=, to=, from= | string    |  ascii    | 100 max | large enough to hold a bitcoin cash address as name plus some       |
+| chain=            | string    |  ascii    | 10 max  | moniker for ledger or addr's blockchain(e.g. bitcoincash, etherium) |
+| addr=             | string    |  ascii    | 100 max | blockchain address associated with the entity                       |
+| type=             | string    |  ascii    | 8 max   | can be one of: entity, resource, ledger                             |
+
+### Collision checking between the user's desired values and the arguments that could need to be parsed. This ensures a valid SLP entry
+| Argument |  Hex from ASCII | Byte count |  
+|:--------:|:---------------:|:----------:|
+| slpver=  | 736c707665723d  |     7      |
+| name=    | 6e616d653d      |     6      |
+| eid=     | 6569643d        |     4      |
+| rid=     | 7269643d        |     4      |
+| qty=     | 7174793d        |     4      |
+| date=    | 646174653d      |     5      |
+| from=    | 66726f6d3d      |     5      | 
+| to=      | 746f3d          |     3      |
+| addr=    |  ...               
+| chain=   |  ...
+| type=    |  ...        
+
+### Commands to be sent from a special address maintained by a validation service for the SLP protocol.
 | 8-byte Command Prefix | Required Arguments | Optional Arguments  | Description |
-|:------------------:|:--------------------------:|:--------------------:|:----------------------------------------------|
-| LEDGER     | slpver=          |    name=, date=            | Create a new ledger or change to specified version | 
-| ENTITY     | eid=            |     name=                 | Create a new entity in the ledger                  |
-| RESOURCE   | rid=, qty=, eid=    |     name=            | Create a new resource in the ledger with initial assignment and quantity allowcation |
-| TRANSFER   | from=, to=, rid=, qty=,    |  date=               | Move an allocation of resource from one entity to another entity |
-
-### command arguments with specific byte allocation requirements
-| argument  | required bytes size | value representation |
-|:---------:|:-------------------:|:---------------------|
-| slpver=   | 1                   | representing up to 128 versions | 
-| date=     | 8                   | representing UTC time in seconds for manually set date stamp by user |
-| eid=      | 1                   | representing up to 128 identifiable entities in a single ledger |
-| rid=      | 1                   | representing up to 128 identifiable resources in a single ledger |
-
-
-### Hex to be used for checking for collisions between the user's entered values and the arguments that could need to be parsed. This ensures a valid SLP entry
-| argument |  hex from ascii |  
-|:--------:|:---------------:|
-| slpver=  | 736c707665723d  |
-| name=    | 6e616d653d      |
-| eid=     | 6569643d        |
-| rid=     | 7269643d        |
-| qty=     | 7174793d        |
-| date=    | 646174653d      |
-| from=    | 66726f6d3d      |
-| to=      | 746f3d          |
-
-### Commands to be sent from a special address maintained by an implementation of the protocol.
-| 8-byte Command Prefix | Required Arguments | Optional Arguments  | Description |
-|:------------------:|:--------------------------:|:--------------------:|:---------------------------------------------------|
-| SIMPLELEDGER       | version=          |              | Mark in the blockchain when the implementation starts accepting the version indicated, sent from implementation address to self |
-| TRACKEDBY  | url=           |           | Transaction sent from an SLP validation implementation address to user's address being tracked by the implementation's internal database - acts as a backup incase implementation's database of tracked addresses is lost.  Also, an address may be tracked by multiple entities validating the address data against the SLP protocol.
-| MESSAGE             | message=                     |      | Error or other message sent from the implementation address to a user's tracked address
+|:---------------------:|:------------------:|:-------------------:|:---------------------------------------------------|
+| SIMPLELEDGER          | version=           |                     | Mark in the blockchain when the implementation starts accepting the version indicated, sent from implementation address to self |
+| TRACKEDBY             | url=               |                     | Transaction sent from an SLP validation service address to a user's address that is being tracked by the implementation's internal database - this also acts as a backup for the validation service in case implementation's database of tracked addresses is lost.  Also, an address may be tracked by multiple entities validating the address data against the SLP protocol. |
+| UNTRACKEDBY           | url=               |                     | Notification from validation service address to user's address that the address is no longer being actively tracked |
+| MESSAGE               | message=           |                     | Error or other message sent from the implementation address to a user's tracked address |
 
 ### Rules
-1) After satisfiying the implementation's join requirements the address should have a message received from the implementation to indicate the address is actively being tracked for ledger errors and notifications.
+1) After satisfiying an implementation join requirements for tracking and validating your address's SLP ledger you should have a message received from that implementation to indicate the address is actively being tracked for ledger errors and notifications from the service.  This is an optional rule/step, however, without joining a service that actively validates your SLP ledger you will need to do it on your own.
 2) Address must have a message to self with LEDGER, where everything afterwards would be part of the ledger parsing
 
 # SLP Version 1 - Future
