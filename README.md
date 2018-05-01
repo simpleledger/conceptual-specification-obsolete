@@ -10,7 +10,7 @@ An important part of any accounting system is to provide a way to resolve descre
 An exciting feature of the protocol provides a standardized way to associate entities with blockchain addresses so that bookkeeping can be done on actual balances of an address on the blockchain.  A validation service provider can then compare balances of blockchain addresses to resolve differences between the ledger.
 
 ### Example Use Cases:
-* Running tabs between roommates 
+* Keeping tabs between roommates
 * Company's stock ledger
 * Government accounting & bookkeeping
 * Product inventory
