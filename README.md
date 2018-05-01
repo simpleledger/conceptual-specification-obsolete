@@ -31,7 +31,7 @@ An exciting feature of the protocol provides a standardized way to associate ent
 | Password | Indicates a password is to be used for certain data fields in a transaction            |
 
 
-### Simplest Example SLP Entries on a blockchain (one blockchain data transaction per line):
+### Simplest Example
 
 | Entry # | Command  | Arguments                           |
 |---------|----------|-------------------------------------|
@@ -47,7 +47,7 @@ An exciting feature of the protocol provides a standardized way to associate ent
 |:-------:|:----------:|:--------:|
 | WidgetA |    70000   |   30000  |
 
-### Advanced Example SLP Entries (multiple resources, voided transactions, and updating of entities)
+### Advanced Example
 
 | Entry # | Command  | Arguments                                             |
 |---------|----------|-------------------------------------------------------|
