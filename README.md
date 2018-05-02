@@ -80,7 +80,10 @@ Encryption of fields containing sensitive name or quantity data (i.e., name=, qt
 SLP defines voiding of resource transfers and renaming of entities and resources so that they can be displayed nicely in the ledger's current state.
 
 ### Upgrading a ledger's protocol version
-Any ledger utilizing a particular SLP version can change to another SLP version by simply using the LEDGER command again with the desired version specified.  Since the blockchain economics and it's protocol capibilities will change over time it will be important to be able to switch to a different SLP version.  For example, if many ledger entries are being made through an API then transactions may be expensive so a much less verbose SLP protocol will be desired to reduce cost.  Another scenario may be that one protocal version may have more features than another.  For each manually set timestamp is desired with each ledger's entries in order to set an "effective date" which may be included in one protocol that doesn't exist in another.
+Any ledger utilizing a particular SLP version can change to another SLP version by simply using the LEDGER command again with the desired version specified.  Since the blockchain economics and it's protocol capibilities will change over time it will be important to be able to switch to a different SLP version.  For example, if many ledger entries are being made through an API then transactions may be expensive so a much less verbose SLP protocol will be desired to reduce cost.  Another scenario may be that one protocal version may have more features than another.  
+
+### Timestamps
+A transaction or transfer of resources that happens in the real world will likely occur at a different time from when the associated ledger entry is made on the blockchain.  For this reason an optional timestamp field will be included for TRANSFER entries.  
 
 ## SLP Version 0
 
@@ -119,9 +122,9 @@ The initial version of SLP designed for simple human readible ledger entries wit
 | date=    | 646174653d      |     5      |
 | from=    | 66726f6d3d      |     5      | 
 | to=      | 746f3d          |     3      |
-| addr=    |  ...               
-| chain=   |  ...
-| type=    |  ...        
+| addr=    | 616464723d      |     5      |
+| chain=   | 636861696e3d    |     6      |
+| type=    | 747970653d      |     5      |         
 
 ### Commands to be sent from a special address maintained by a validation service for the SLP protocol.
 | 8-byte Command Prefix | Required Arguments | Optional Arguments  | Description |
