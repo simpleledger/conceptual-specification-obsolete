@@ -3,9 +3,9 @@
 This specification defines a protocol for using a single blockchain address as a ledger for performing accounting and bookkeeping on a blockchain.  Any quantifiable resource allocated between any number of entities can be kept track of using a single blockchain address.  The protocol is designed to be used with the bitcoin OP_RETURN opcode as a human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).
 
 ## Introduction and Purpose
-There are many useful business cases where only a single person or group is responsible for keeping track of items, but the data is relied on by other entities.  In these cases having an absolute immutable record of historical events may be just as important as knowing the current allocation state.  For such purposes having a simple protocol for immutable bookkeeping of resources is defined herein.
+There are many useful business cases where only a single person or group is responsible for keeping track of items, but the data is relied on by other entities.  In these cases, having an absolute immutable record of historical events may be just as important as knowing the current allocation state.  For such purposes having a simple protocol for immutable bookkeeping of resources is defined herein.
 
-An important part of any accounting system is to provide a way to resolve descrepancies and errors that exists within the ledger.  The protocol provides a standard way for a validation service provider to check the state of the ledger and notify the address when errors exist.  Using a validation service provider is not a required part of the protocol, but would be essential feature for any serious ledger.  
+An important part of any accounting system is to provide a way to resolve discrepancies and errors that exists within the ledger.  The protocol provides a standard way for a validation service provider to check the state of the ledger and notify the address when errors exist.  Using a validation service provider is not a required part of the protocol but would be essential feature for any serious ledger.  
 
 An exciting feature of the protocol provides a standardized way to associate entities with blockchain addresses so that bookkeeping can be done on actual balances of an address on the blockchain.  A validation service provider can then compare balances of blockchain addresses to resolve differences between the ledger.
 
@@ -74,27 +74,27 @@ An exciting feature of the protocol provides a standardized way to associate ent
 
 
 ### Privacy on a Public Blockchain using Encryption
-Encryption of fields containing sensitive name or quantity data (i.e., name=, qty= fields) is possible using a combination of assymetric keys and symetric keys.  This feature will allow someone to maintain an encrypted ledger with the ability to share only selected transaction data with third-parties using a passcode.  Everyone will be able to see the command, but the certain field data can be hidden with a password.
+Encryption of fields containing sensitive name or quantity data (i.e., name=, qty= fields) is possible using a combination of asymmetric keys and symmetric keys.  This feature will allow someone to maintain an encrypted ledger with the ability to share only selected transaction data with third-parties using a passcode.  Everyone will be able to see the command, but the certain field data can be hidden with a password.
 
-### Edit and Renaming capibilities
+### Edit and Renaming capabilities
 SLP defines voiding of resource transfers and renaming of entities and resources so that they can be displayed nicely in the ledger's current state.
 
 ### Upgrading a ledger's protocol version
-Any ledger utilizing a particular SLP version can change to another SLP version by simply using the LEDGER command again with the desired version specified.  Since the blockchain economics and it's protocol capibilities will change over time it will be important to be able to switch to a different SLP version.  For example, if many ledger entries are being made through an API then transactions may be expensive so a much less verbose SLP protocol will be desired to reduce cost.  Another scenario may be that one protocal version may have more features than another.  
+Any ledger utilizing a particular SLP version can change to another SLP version by simply using the LEDGER command again with the desired version specified.  Since the blockchain economics and protocol capibilities will change over time it will be important to be able to switch to a different SLP version.  For example, if many ledger entries are being made through an API then transactions may be expensive so a much less verbose SLP protocol will be desired to reduce cost.  Another scenario may be that one protocol version may have more features than another.  
 
 ### Timestamps
-A transaction or transfer of resources that happens in the real world will likely occur at a different time from when the associated ledger entry is made on the blockchain.  For this reason an optional timestamp field will be included for TRANSFER entries.  
+A transaction or transfer of resources that happens in the real world will likely occur at a different time from when the associated ledger entry is made on the blockchain.  For this reason, an optional timestamp field can be included for TRANSFER entries.  
 
 ## SLP Version 0
 
-The initial version of SLP designed for simple human readible ledger entries within 220-bytes.  
+The initial version of SLP designed for simple human readable ledger entries within 220-bytes.  
 
 ### Commands to be used by a user at a single bitcoin address
 | 8-byte Command Prefix | Required Arguments    | Optional Arguments  | Description                                             |
 |:---------------------:|:---------------------:|:-------------------:|:-----------------------------------------------------|
 | LEDGER                | slpver=               | name=, date=, chain=| Create a new ledger or change to specified version   | 
 | ENTITY                | eid=                  | name=, addr=, chain=| Create a new entity in the ledger                    |
-| RESOURCE              | rid=, qty=, eid=.     | name=               | Create a new resource in the ledger with initial assignment and quantity allowcation |
+| RESOURCE              | rid=, qty=, eid=.     | name=               | Create a new resource in the ledger with initial assignment and quantity allocation |
 | TRANSFER              | from=, to=, rid=, qty=| date=               | Move an allocation of resource from one entity to another entity |
 | UPDATE                | type=, id=,           | name=, addr=, chain=| Update at least one of the optional arguments for an entity, resource, or the ledger |
 
@@ -135,7 +135,7 @@ The initial version of SLP designed for simple human readible ledger entries wit
 | MESSAGE               | message=           |                     | Error or other message sent from the implementation address to a user's tracked address |
 
 ### Rules
-1) After satisfiying an implementation join requirements for tracking and validating your address's SLP ledger you should have a message received from that implementation to indicate the address is actively being tracked for ledger errors and notifications from the service.  This is an optional rule/step, however, without joining a service that actively validates your SLP ledger you will need to do it on your own.
+1) After satisfying an implementation join requirements for tracking and validating your address's SLP ledger you should have a message received from that implementation to indicate the address is actively being tracked for ledger errors and notifications from the service.  This is an optional rule/step, however, without joining a service that actively validates your SLP ledger you will need to do it on your own.
 2) Address must have a message to self with LEDGER, where everything afterwards would be part of the ledger parsing
 
 # SLP Version 1 - Future
