@@ -135,8 +135,8 @@ The initial version of SLP designed for simple human readable ledger entries wit
 | MESSAGE               | message=           |                     | Error or other message sent from the implementation address to a user's tracked address |
 
 ### Rules
-1) After satisfying an implementation join requirements for tracking and validating your address's SLP ledger you should have a message received from that implementation to indicate the address is actively being tracked for ledger errors and notifications from the service.  This is an optional rule/step, however, without joining a service that actively validates your SLP ledger you will need to do it on your own.
-2) Address must have a message to self with LEDGER, where everything afterwards would be part of the ledger parsing
+1) After satisfying a validation service's join requirements for tracking and validating your address's ledger you should have a message received from that validation service to confirm your address is actively being validated by the service.  This is an optional step, but without joining a validation service your address will not be actively validated for errors and discrepancies.
+2) Your address must have a message to self with the protocol message of "LEDGER", where everything afterwards would be part of the ledger parsing
 
 # SLP Version 1 - Future
 
