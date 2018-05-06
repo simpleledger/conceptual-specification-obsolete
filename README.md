@@ -1,4 +1,4 @@
-# Simple Ledger Protocol (SLP) Specification
+ # Simple Ledger Protocol (SLP) Specification
 
 This specification defines a protocol for using a single blockchain address as a ledger for performing accounting and bookkeeping on a blockchain.  Any quantifiable resource allocated between any number of entities can be kept track of using a single blockchain address.  The protocol is designed to be used with the bitcoin OP_RETURN opcode as a human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).
 
@@ -26,10 +26,7 @@ An exciting feature of the protocol provides a standardized way to associate ent
 | Transfer | Indicates movement of a resource between the defined entities                          |
 | Void     | Indicates a previously made transaction should be ignored in the ledger calculation    |
 | Update   | Indicates updating of field data for a particular entity or resource                   |
-| Implementation| The company validating your transactions comply with the SLP protocol             |
-| Comment  | Indicates a note is being made about a transaction on the blockchain                   |
-| Password | Indicates a password is to be used for certain data fields in a transaction            |
-
+| Validation Service Provider | A company that is validating transaction compliance with the SLP protocol |
 
 ### Simplest Example
 
@@ -41,7 +38,7 @@ An exciting feature of the protocol provides a standardized way to associate ent
 | 4       | ENTITY   | eid=2,name=XYZ Inc.                 |
 | 5       | TRANSFER | rid=1,from=1,to=2,qty=30000         |
 
-#### Resulting ledger snapshot/state calculated by software application
+#### Resulting ledger calculated by a software application
 
 |         | CompanyABC | XYZ Inc. |
 |:-------:|:----------:|:--------:|
@@ -65,13 +62,12 @@ An exciting feature of the protocol provides a standardized way to associate ent
 | 12      | TRANSFER | rid=2,from=1,to=3,qty=25                              |
 | 13      | UPDATE   | type=entity,id=3,name=BarFoo                          |
 
-#### Resulting ledger snapshot/state calculated by a software application
+#### Resulting ledger calculated by a software application
 |         | CompanyABC | XYZ Inc. | Global Inc |
 |:-------:|:----------:|:--------:|:----------:|
 | WidgetA |    70000   |   30000  |      0     |
 | WidgetB |     75     |     0    |     25     |
 |  BarFoo |    1000    |     0    |    5000    | 
-
 
 ### Privacy on a Public Blockchain using Encryption
 Encryption of fields containing sensitive name or quantity data (i.e., name=, qty= fields) is possible using a combination of asymmetric keys and symmetric keys.  This feature will allow someone to maintain an encrypted ledger with the ability to share only selected transaction data with third-parties using a passcode.  Everyone will be able to see the command, but the certain field data can be hidden with a password.
@@ -94,7 +90,7 @@ The initial version of SLP designed for simple human readable ledger entries wit
 |:---------------------:|:---------------------:|:-------------------:|:-----------------------------------------------------|
 | LEDGER                | slpver=               | name=, date=, chain=| Create a new ledger or change to specified version   | 
 | ENTITY                | eid=                  | name=, addr=, chain=| Create a new entity in the ledger                    |
-| RESOURCE              | rid=, qty=, eid=.     | name=               | Create a new resource in the ledger with initial assignment and quantity allocation |
+| RESOURCE              | rid=, qty=, eid=      | name=               | Create a new resource in the ledger with initial assignment and quantity allocation |
 | TRANSFER              | from=, to=, rid=, qty=| date=               | Move an allocation of resource from one entity to another entity |
 | UPDATE                | type=, id=,           | name=, addr=, chain=| Update at least one of the optional arguments for an entity, resource, or the ledger |
 
