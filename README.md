@@ -3,36 +3,35 @@
 This specification defines a protocol for using a single blockchain address as a ledger for performing accounting and bookkeeping on a blockchain.  Any quantifiable resource allocated between any number of entities can be kept track of using a single blockchain address.  The protocol is designed to be used with the bitcoin OP_RETURN opcode as a human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).
 
 ## Introduction and Purpose
-There are many useful business cases where only a single person or group is responsible for keeping track of items, but the data is relied on by other entities.  In these cases, having an absolute immutable record of historical events may be just as important as knowing the current allocation state.  For such purposes having a simple protocol for immutable bookkeeping of resources is defined herein.
+There are many useful business cases where only a single person or group is responsible for keeping track of items, but the data is relied upon by other entities.  In these cases, having an immutable record of historical events is often just as important as knowing the current allocation state of resources.  For such purposes having a simple protocol for immutable bookkeeping of resources is defined herein.
 
-An important part of any accounting system is to provide a way to resolve discrepancies and errors that exists within the ledger.  The protocol provides a standard way for a validation service provider to check the state of the ledger and notify the address when errors exist.  Using a validation service provider is not a required part of the protocol but would be essential feature for any serious ledger.  
+An important part of any accounting system is to provide a way to resolve discrepancies and errors that exists within the ledger.  The protocol provides rules for a Validation Service Provider (VSP) to check the state of such a ledger and notify the ledger's address when errors do exist.  Using a VSP is not a required part of the protocol but it will be an essential feature for ledgers that have importance.  
 
-An exciting feature of the protocol provides a standardized way to associate entities with blockchain addresses so that bookkeeping can be done on actual balances of an address on the blockchain.  A validation service provider can then compare balances of blockchain addresses to resolve differences between the ledger.
+Digital assets and non-digital assets (i.e., resources) can be tracked using SLP, but more powerful protocol features will exist for digital assets that exist on some blockchain.  The protocol will allow an entity to be associated with digital asset addresses for any blockchain, virtual blockchain, or colored coin protocol.  A validation service provider can then examine balances of blockchain addresses and identify differences between actual and expected balances for the digital assets.
 
 ### Example Use Cases:
-* Keeping tabs between roommates
-* Company's stock ledger
-* Government accounting & bookkeeping
-* Product inventory
-* Loan balance
-* Tracking and bookkeeping of actual bitcoin transactions
+* Track blockchain assets
+* Maintain a company's stock ledger
+* Perform government accounting & bookkeeping
+* Track inventory for any product
+* Manage and track multiple loan balances
 
 ### Terms and Definitions:
-| Term     | Definition                                                                             |
-|----------|----------------------------------------------------------------------------------------|
-| Ledger   | A series of immutable entries with prefixes and fields defined in this protocol        |
-| Resource | A quantifiable item or object (e.g., company shares, products) being held by an entity |
-| Entity   | A person, place, thing or category that resources are allocated to                     |
-| Transfer | Indicates movement of a resource between the defined entities                          |
-| Void     | Indicates a previously made transaction should be ignored in the ledger calculation    |
-| Update   | Indicates updating of field data for a particular entity or resource                   |
-| Validation Service Provider | A company that is validating transaction compliance with the SLP protocol |
+| Term     | Definition                                                                                                                |
+|----------|---------------------------------------------------------------------------------------------------------------------------|
+| Ledger   | A series of immutable entries with prefixes and fields defined in this protocol                                           |
+| Resource | A quantifiable item, object, asset, or liability (e.g., company shares, products, digital assets) being held by an entity |
+| Entity   | A person, place, thing or category that resources are allocated to                                                        |
+| Transfer | Indicates movement of a resource between the defined entities                                                             |
+| Void     | Indicates a previously made transaction should be ignored in the ledger calculation                                       |
+| Update   | Indicates updating of field data for a particular entity or resource                                                      |
+| Validation Service Provider | A company that is validating transaction compliance with the SLP protocol                              |
 
-### Simplest Example
+### Simplest Example (non-digital resources)
 
 | Entry # | Command  | Arguments                           |
 |---------|----------|-------------------------------------|
-| 1       | LEDGER   | slpver=1,name=ABC Inventory        |
+| 1       | LEDGER   | slpver=1,name=ABC Inventory         |
 | 2       | ENTITY   | eid=1,name=CompanyABC               |
 | 3       | RESOURCE | rid=1,name=WidgetA,qty=100000,eid=1 |
 | 4       | ENTITY   | eid=2,name=XYZ Inc.                 |
@@ -44,7 +43,7 @@ An exciting feature of the protocol provides a standardized way to associate ent
 |:-------:|:----------:|:--------:|
 | WidgetA |    70000   |   30000  |
 
-### Advanced Example
+### Advanced Example (non-digital resources)
 
 | Entry # | Command  | Arguments                                             |
 |---------|----------|-------------------------------------------------------|
@@ -80,6 +79,15 @@ Any ledger utilizing a particular SLP version can change to another SLP version 
 
 ### Timestamps
 A transaction or transfer of resources that happens in the real world will likely occur at a different time from when the associated ledger entry is made on the blockchain.  For this reason, an optional timestamp field can be included for TRANSFER entries.  
+
+### Multiple OP_RETURN Spaces
+Multiple outputs with OP_RETURN included in their script provides additional data storage.  The protocol will utilize multiple transaction output in some cases as appropriate.
+
+### Blockchain Registry
+The SLP will provide a registry of identifiers so that various blockchains, virtual blockchains, and colored coins can be referenced efficiently in an SLP transaction.  
+
+### Inter-ledger communications
+TODO
 
 ## SLP Version 0
 
