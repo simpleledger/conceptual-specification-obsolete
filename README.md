@@ -1,20 +1,22 @@
 # Simple Ledger Protocol (SLP) Specification
 
-This specification defines a protocol for using a single blockchain address as a ledger for tracking resources on a blockchain.  Any quantifiable resource allocated between any number of entities can be tracked using a single blockchain address.  The protocol is designed to be used with the bitcoin OP_RETURN opcode as a human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).
+This specification defines a protocol for using a single blockchain address as a ledger for tracking resources on a blockchain.  Any quantifiable resource allocated between any number of entities can be tracked using a single blockchain address.  The protocol is designed to be used with the bitcoin OP_RETURN opcode as a mostly human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).
 
-As part of the SLP system a public registry of virtual blockchains and colored coins will be stored at a single bitcoin address to allow for interoperability between virtual blockchains using SLP.  The registry will provide each chain with a unique identifier or moniker.  One virtual blockchain may use a single bitcoin address as a ledger to track creation, destruction, and transfer of their own digital assets between holding entities.
+As part of the SLP project a special public registry (ledger) will be created to track all known virtual blockchains and colored coins being used publically.  This public registry will promote interoperability between virtual blockchains utilizing SLP.  The registry itself will follow SLP and each chain entity will be provided with a unique identifier and moniker.  This public registry will be relied upon by virtual blockchains and perhaps colored coins for interoperability between chains.  Each virtual blockchain or colored coin may also use its own bitcoin address as a SLP ledger to track creation, destruction, and transfer of their own digital assets between holding entities.
 
 ## Introduction and Purpose
 There are many useful business cases where only a single person or group is responsible for keeping track of items, but the data is relied upon by others.  In these cases, having an immutable record of historical events is often just as important as knowing the current allocation state of resources.  For such purposes having a simple protocol for immutable bookkeeping of resources is defined herein.
 
 An important part of any computerized bookkeeping system is the resolution of errors that exist within the ledger's entries.  To that end, SLP provides specific guidelines for a Validation Service Provider (VSP) to check the state and validity of a SLP ledger.  In general a VSP will notify the ledger's address with a human readable OP_RETURN message when errors exist.  Using a VSP is not a required part of the protocol but it will be an essential feature for ledgers that have any importance. A VSP can examine balances of digital asset addresses and identify differences between actual and expected balances for those digital assets being tracked with an SLP ledger.
 
+A virtual blockchain or colored coin may want to build and run it's own VSP implementation in order to handle the customized requirements of that particular chain.  VSPs will either built to be general purpose or highly specialized.
+
 ### Example Use Cases (using a single bitcoin address):
-* Track multiple types of blockchain assets (e.g., colored coins)
+* Track multiple types of blockchain assets (e.g., colored coins and virtual chain assets)
 * Maintain a company's stock ledger with multiple types/series of stock
 * Track inventory for multiple products
 * Manage and track balances and payments of multiple loans or accounts receivable
-* Creating a registry
+* Store a public registry of various entities and resources
 
 ### Terms and Definitions:
 | Term     | Definition                                                                                                                |
