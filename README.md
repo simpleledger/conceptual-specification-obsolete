@@ -1,20 +1,20 @@
- # Simple Ledger Protocol (SLP) Specification
+# Simple Ledger Protocol (SLP) Specification
 
-This specification defines a protocol for using a single blockchain address as a ledger for performing accounting and bookkeeping on a blockchain.  Any quantifiable resource allocated between any number of entities can be kept track of using a single blockchain address.  The protocol is designed to be used with the bitcoin OP_RETURN opcode as a human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).
+This specification defines a protocol for using a single blockchain address as a ledger for tracking resources on a blockchain.  Any quantifiable resource allocated between any number of entities can be tracked using a single blockchain address.  The protocol is designed to be used with the bitcoin OP_RETURN opcode as a human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).
+
+As part of the SLP system a public registry of virtual blockchains and colored coins will be stored at a single bitcoin address to allow for interoperability between virtual blockchains using SLP.  The registry will provide each chain with a unique identifier or moniker.  One virtual blockchain may use a single bitcoin address as a ledger to track creation, destruction, and transfer of their own digital assets between holding entities.
 
 ## Introduction and Purpose
-There are many useful business cases where only a single person or group is responsible for keeping track of items, but the data is relied upon by other entities.  In these cases, having an immutable record of historical events is often just as important as knowing the current allocation state of resources.  For such purposes having a simple protocol for immutable bookkeeping of resources is defined herein.
+There are many useful business cases where only a single person or group is responsible for keeping track of items, but the data is relied upon by others.  In these cases, having an immutable record of historical events is often just as important as knowing the current allocation state of resources.  For such purposes having a simple protocol for immutable bookkeeping of resources is defined herein.
 
-An important part of any accounting system is to provide a way to resolve discrepancies and errors that exists within the ledger.  The protocol provides rules for a Validation Service Provider (VSP) to check the state of such a ledger and notify the ledger's address when errors do exist.  Using a VSP is not a required part of the protocol but it will be an essential feature for ledgers that have importance.  
+An important part of any computerized bookkeeping system is the resolution of errors that exist within the ledger's entries.  To that end, SLP provides specific guidelines for a Validation Service Provider (VSP) to check the state and validity of a SLP ledger.  In general a VSP will notify the ledger's address with a human readable OP_RETURN message when errors exist.  Using a VSP is not a required part of the protocol but it will be an essential feature for ledgers that have any importance. A VSP can examine balances of digital asset addresses and identify differences between actual and expected balances for those digital assets being tracked with an SLP ledger.
 
-Digital assets and non-digital assets (i.e., resources) can be tracked using SLP, but more powerful protocol features will exist for digital assets that exist on some blockchain.  The protocol will allow an entity to be associated with digital asset addresses for any blockchain, virtual blockchain, or colored coin protocol.  A validation service provider can then examine balances of blockchain addresses and identify differences between actual and expected balances for the digital assets.
-
-### Example Use Cases:
-* Track blockchain assets
-* Maintain a company's stock ledger
-* Perform government accounting & bookkeeping
-* Track inventory for any product
-* Manage and track multiple loan balances
+### Example Use Cases (using a single bitcoin address):
+* Track multiple types of blockchain assets (e.g., colored coins)
+* Maintain a company's stock ledger with multiple types/series of stock
+* Track inventory for multiple products
+* Manage and track balances and payments of multiple loans or accounts receivable
+* Creating a registry
 
 ### Terms and Definitions:
 | Term     | Definition                                                                                                                |
@@ -27,7 +27,7 @@ Digital assets and non-digital assets (i.e., resources) can be tracked using SLP
 | Update   | Indicates updating of field data for a particular entity or resource                                                      |
 | Validation Service Provider | A company that is validating transaction compliance with the SLP protocol                              |
 
-### Simplest Example (non-digital resources)
+### Simplest Example
 
 | Entry # | Command  | Arguments                           |
 |---------|----------|-------------------------------------|
@@ -83,11 +83,11 @@ A transaction or transfer of resources that happens in the real world will likel
 ### Multiple OP_RETURN Spaces
 Multiple outputs with OP_RETURN included in their script provides additional data storage.  The protocol will utilize multiple transaction output in some cases as appropriate.
 
-### Blockchain Registry
-The SLP will provide a registry of identifiers so that various blockchains, virtual blockchains, and colored coins can be referenced efficiently in an SLP transaction.  
+### Virtual Chain Registry (https://virtualchain.cash)
+The SLP will provide a public registry of identifiers so that various blockchains, virtual blockchains, and colored coins can be referenced efficiently in an SLP transaction.  This public registry itself will be stored at a single bitcoin address using the SLP with it's key maintained by a VSP.  For a small fee anyone will be allowed to register their virtual blockchain's moniker on this registry.
 
-### Inter-ledger communications
-TODO
+### Inter-ledger communications (still needs deep thought)
+SLP requires that any address using SLP shall ignore any OP_RETURN outputs that come from unapproved addresses. In other words, by default only ledger entries that have come from the same address should be included.  Otherwise, someone could easily mess up your ledger by just sending OP_RETURN messages to your address.  Nothing except transaction fees would detour someone from sending OP_RETURN messages to your address if they wanted to.  VSP following SLP will know to ignore addresses that have not been recorded in your ledger with permissions.
 
 ## SLP Version 0
 
@@ -101,6 +101,7 @@ The initial version of SLP designed for simple human readable ledger entries wit
 | RESOURCE              | rid=, qty=, eid=      | name=               | Create a new resource in the ledger with initial assignment and quantity allocation |
 | TRANSFER              | from=, to=, rid=, qty=| date=               | Move an allocation of resource from one entity to another entity |
 | UPDATE                | type=, id=,           | name=, addr=, chain=| Update at least one of the optional arguments for an entity, resource, or the ledger |
+| MESSAGE               | msg=, eid=            |                     | Create a message to be sent to an entity's address, handled by a VSP.  VSP should provide confirmation response when complete. |
 
 ### Argument requirements
 | Argument          | Type      | Encoding  | Bytes   | Representation                                                      |
@@ -115,7 +116,7 @@ The initial version of SLP designed for simple human readable ledger entries wit
 | addr=             | string    |  ascii    | 100 max | blockchain address associated with the entity                       |
 | type=             | string    |  ascii    | 8 max   | can be one of: entity, resource, ledger                             |
 
-### Collision checking between the user's desired values and the arguments that could need to be parsed. This ensures a valid SLP entry
+### Collision checking between the user's desired values and the arguments that may need parsed. This will ensure a valid SLP entry
 | Argument |  Hex from ASCII | Byte count |  
 |:--------:|:---------------:|:----------:|
 | slpver=  | 736c707665723d  |     7      |
