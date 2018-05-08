@@ -1,4 +1,4 @@
-# Simple Ledger Protocol (SLP) Specification
+# Simple Ledger Protocol (SLP) Specification WIP
 
 This specification defines a protocol for using a single blockchain address as a ledger for tracking resources on a blockchain.  Any quantifiable resource allocated between any number of entities can be tracked using a single blockchain address.  The protocol is designed to be used with the Bitcoin Cash OP_RETURN space as a human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).
 
@@ -104,6 +104,8 @@ The initial version of SLP designed for simple human readable ledger entries wit
 | TRANSFER              | from=, to=, rid=, qty=| date=               | Move an allocation of resource from one entity to another entity |
 | UPDATE                | type=, id=,           | name=, addr=, chain=| Update at least one of the optional arguments for an entity, resource, or the ledger |
 | MESSAGE               | msg=, eid=            |                     | Create a message to be sent to an entity's address, handled by a VSP.  VSP should provide confirmation response when complete. |
+| COMMENT               | msg=                  | txn=, chain=, replyto=| Create a generic comment about any transaction on any chain, can also reply to a previously made comment using chain's txn id |
+| PERMIT                | level=, addr=, chain= |                    | Specify access permissions to this ledger for an address on a particular chain (e.g. one or more VSPs on main chain or even an address from a virtual chain) |
 
 ### Argument requirements
 | Argument          | Type      | Encoding  | Bytes   | Representation                                                      |
@@ -117,6 +119,7 @@ The initial version of SLP designed for simple human readable ledger entries wit
 | chain=            | string    |  ascii    | 10 max  | moniker for ledger or addr's blockchain(e.g. bitcoincash, etherium) |
 | addr=             | string    |  ascii    | 100 max | blockchain address associated with the entity                       |
 | type=             | string    |  ascii    | 8 max   | can be one of: entity, resource, ledger                             |
+| level=            |           |           |         | permissions access level to ledger can be one of: TBD               |
 
 ### Collision checking between the user's desired values and the arguments that may need parsed. This will ensure a valid SLP entry
 | Argument |  Hex from ASCII | Byte count |  
@@ -131,7 +134,8 @@ The initial version of SLP designed for simple human readable ledger entries wit
 | to=      | 746f3d          |     3      |
 | addr=    | 616464723d      |     5      |
 | chain=   | 636861696e3d    |     6      |
-| type=    | 747970653d      |     5      |         
+| type=    | 747970653d      |     5      | 
+| level=   |                 |     6      |
 
 ### Commands to be sent from a special address maintained by a validation service for the SLP protocol.
 | 8-byte Command Prefix | Required Arguments | Optional Arguments  | Description |
@@ -141,11 +145,7 @@ The initial version of SLP designed for simple human readable ledger entries wit
 | UNTRACKEDBY           | url=               |                     | Notification from validation service address to user's address that the address is no longer being actively tracked |
 | MESSAGE               | message=           |                     | Error or other message sent from the implementation address to a user's tracked address |
 
-### Rules
+### Rules WIP
 1) After satisfying a validation service's join requirements for tracking and validating your address's ledger you should have a message received from that validation service to confirm your address is actively being validated by the service.  This is an optional step, but without joining a validation service your address will not be actively validated for errors and discrepancies.
 2) Your address must have a message to self with the protocol message of "LEDGER", where everything afterwards would be part of the ledger parsing
-
-# SLP Version 1 - Future
-
-Include user commenting system and encryption.
 
