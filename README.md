@@ -2,14 +2,16 @@
 
 This specification defines a protocol for using a single blockchain address as a ledger for tracking resources on a blockchain.  Any quantifiable resource allocated between any number of entities can be tracked using a single blockchain address.  The protocol is designed to be used with the Bitcoin Cash OP_RETURN space as a human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).
 
-As part of the SLP project a special public registry will be created to track all known virtual blockchains and colored coins being used publically.  This public registry will promote interoperability between virtual blockchains utilizing SLP.  The registry itself will be a ledger that uses SLP and during the registration process each virtual chain will be provided with a unique identifier and moniker.  This public registry will be relied upon by virtual blockchains and perhaps colored coins for interoperability between virtual chains.  Additionally, each virtual blockchain or colored coin may also use an internal SLP ledger to track creation, destruction, and transfer of its own digital assets between holding entities.
+As part of the SLP project a public registry will be created to track virtual blockchains using SLP.  The public registry will promote interoperability between virtual blockchains utilizing SLP.  The registry itself will be a ledger that uses SLP and during the registration process each virtual chain will be provided with a unique identifier and moniker.  This public registry will be relied upon by virtual blockchains and perhaps colored coins for interoperability between virtual chains.  Additionally, each virtual blockchain or colored coin may also use an internal SLP ledger to track creation, destruction, and transfer of its own digital assets between holding entities.
 
 ## Introduction and Purpose
-There are many useful business cases where only a single person or group is responsible for keeping track of items, but the data is relied upon by others.  In these cases, having an immutable record of historical events is often just as important as knowing the current allocation state of resources.  For such purposes having a simple protocol for immutable bookkeeping of resources is defined herein.
+There are many useful business cases where only a single person or group is responsible for keeping track of items, and the data is also relied upon by others.  In these cases, having an immutable record of historical events is often just as important as knowing the current allocation state of resources.  For such purposes having a simple protocol for immutable bookkeeping of resources on a blockchain is defined herein.
 
-An important part of any computerized bookkeeping system is the resolution of errors that exist within the ledger's entries.  To that end, SLP provides specific guidelines for a Validation Service Provider (VSP) to check the state and validity of a SLP ledger.  The VSP should first provide protocol validation through a graphical user interface or response messages prior to making the ledger transaction, however, post-transaction validation by the VSP should also be performed.  If errors are found during a post-transaction validation check (because errors were not properly validated during the pre-transaction check) the VSP should then send notify the ledger's address with a human readable OP_RETURN message with an appropriate error message so that the ledger can be corrected manually by the user.  Using a VSP is not a required part of the protocol but it will be an essential feature for ledgers that have any importance. A VSP can examine balances of digital asset addresses and identify differences between actual and expected balances for those digital assets being tracked with an SLP ledger.
+An important part of any computerized bookkeeping system is the prevention of errors that exist within the ledger's entries.  To that end, SLP provides specific guidelines for a Validation Service Provider (VSP) to check the state and validity of a SLP ledger, and to also make valid SLP ledger transactions.  The VSP is an essential component of ledgers that have any importance.
 
-A virtual blockchain or colored coin may want to build and run it's own VSP implementation in order to handle the customized requirements of that particular chain.  VSPs will either built to be general purpose or highly specialized.
+A virtual blockchain may use SLP as a method to keep track of its own state.  If many virtual blockchains utilize SLP and the public SLP registry the ability for virtual blockchains to interoperate will be enhanced since VSPs can be built to be aware of other virtual chains. will be enh  will need a space to store their  or colored coin may want to build and run it's own VSP implementation in order to handle the customized requirements of that particular chain.  VSPs will either built to be general purpose or highly specialized.
+
+The VSP should first provide protocol validation prior to making a SLP ledger transaction, however, post-transaction validation by the VSP should also be performed whenever state is fetched.  If errors are found during a post-transaction validation check (because errors were not properly validated during the pre-transaction check) the VSP should then send notify the ledger's address with a human readable OP_RETURN message with an appropriate error message so that the ledger can be corrected manually by the user. A VSP can examine balances of digital asset addresses and identify differences between actual and expected balances for those digital assets being tracked with an SLP ledger.
 
 ### Example Use Cases (using a single bitcoin address):
 * Track multiple types of blockchain assets (e.g., colored coins and virtual chain assets)
@@ -98,8 +100,8 @@ The initial version of SLP designed for simple human readable ledger entries wit
 ### Commands and arguments used by a VSP to maintain a SLP ledger
 | 8-byte Command Prefix | Required Arguments    | Optional Arguments  | Description                                          |
 |:---------------------:|:---------------------:|:-------------------:|:-----------------------------------------------------|
-| LEDGER                | slpver=               | name=, date=, chain=| Create a new ledger or change to specified version   | 
-| ENTITY                | eid=                  | name=, addr=, chain=| Create a new entity in the ledger                    |
+| LEDGER                | slpver=               | name=, date=, registry= | Create a new ledger or change to specified version   | 
+| ENTITY                | eid=                  | name=, addr=        | Create a new entity in the ledger                    |
 | RESOURCE              | rid=, qty=, eid=      | name=               | Create a new resource in the ledger with initial assignment and quantity allocation |
 | TRANSFER              | from=, to=, rid=, qty=| date=.              | Move an allocation of resource from one entity to another entity |
 | UPDATE                | type=, id=,           | name=, addr=, chain=| Update at least one of the optional arguments for an entity, resource, or the ledger |
@@ -115,14 +117,15 @@ The initial version of SLP designed for simple human readable ledger entries wit
 ### Argument requirements
 | Argument          | Type      | Encoding  | Bytes   | Representation                                                      |
 |:-----------------:|:---------:|:---------:|:-------:|:-------------------------------------------------------------------:|
-| slpver=           | number    |  byte     | 1 exact | representing up to 256 versions                                     | 
-| date=             | number    |  bytes    | 4 exact | representing POSIX time manually set date stamp by user             |
-| eid=              | number    |  bytes    | 2 max   | representing up to 65536 possible entity ids in a single ledger     |
-| rid=              | number    |  bytes    | 2 max   | representing up to 65536 possible resource ids in a single ledger   |
-| qty=              | number    |  bytes    | 4 max   | big enough to hold bit                                              |
-| name=, to=, from= | string    |  ascii    | 100 max | large enough to hold a bitcoin cash address as name plus some       |
-| chain=            | string    |  ascii    | 10 max  | moniker for ledger or addr's blockchain name                        |
-| addr=             | string    |  ascii    | 100 max | blockchain address associated with the entity                       |
+| slpver=           | number    |  byte     | 1 exact | representing up to 256 versions                                     |
+| registry=         | string    |  ascii    | 100 max | the url to a virtual blockchain registry                            |
+| date=             | number    |  bytes    | 4 exact | representing POSIX time manually set date stamp by user             |
+| eid=              | number    |  bytes    | TBD     | representing up to X possible entity ids in a single ledger         |
+| rid=              | number    |  bytes    | TBD     | representing up to X possible resource ids in a single ledger       |
+| qty=              | number    |  bytes    | TBD     | needs to be big enough to hold bitcoin number value                 |
+| name=, to=, from= | string    |  ascii    | 42 max  | large enough to hold a bitcoin cash address                         |
+| chain=            | string    |  ascii    | 42 max  | moniker or address for SLP ledger                                   |
+| addr=             | string    |  ascii    | 42 max  | blockchain address associated with the entity                       |
 | type=             | string    |  ascii    | 8 max   | can be one of: entity, resource, ledger                             |
 | level=            | TBD       |  TBD      | TBD     | permissions access level to SLP ledger can be one of: ...           |
 
@@ -141,14 +144,6 @@ The initial version of SLP designed for simple human readable ledger entries wit
 | chain=   | 636861696e3d    |     6      |
 | type=    | 747970653d      |     5      | 
 | level=   | 6c6576656c3d    |     6      |
-
-### Commands to be sent from a special address maintained by a validation service for the SLP protocol.
-| 8-byte Command Prefix | Required Arguments | Optional Arguments  | Description |
-|:---------------------:|:------------------:|:-------------------:|:---------------------------------------------------|
-| SIMPLELEDGER          | version=           |                     | Mark in the blockchain when the implementation starts accepting the version indicated, sent from implementation address to self |
-| TRACKEDBY             | url=               |                     | Transaction sent from an SLP validation service address to a user's address that is being tracked by the implementation's internal database - this also acts as a backup for the validation service in case implementation's database of tracked addresses is lost.  Also, an address may be tracked by multiple entities validating the address data against the SLP protocol. |
-| UNTRACKEDBY           | url=               |                     | Notification from validation service address to user's address that the address is no longer being actively tracked |
-| MESSAGE               | message=           |                     | Error or other message sent from the implementation address to a user's tracked address |
 
 ### Rules WIP
 1) After satisfying a validation service's join requirements for tracking and validating your address's ledger you should have a message received from that validation service to confirm your address is actively being validated by the service.  This is an optional step, but without joining a validation service your address will not be actively validated for errors and discrepancies.
