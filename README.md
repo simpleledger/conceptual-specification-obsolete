@@ -95,17 +95,22 @@ SLP requires that any address using SLP shall ignore any OP_RETURN outputs that 
 
 The initial version of SLP designed for simple human readable ledger entries within 220-bytes.  
 
-### Commands to be used by a user at a single bitcoin address
-| 8-byte Command Prefix | Required Arguments    | Optional Arguments  | Description                                             |
+### Commands and arguments used by a VSP to maintain a SLP ledger
+| 8-byte Command Prefix | Required Arguments    | Optional Arguments  | Description                                          |
 |:---------------------:|:---------------------:|:-------------------:|:-----------------------------------------------------|
 | LEDGER                | slpver=               | name=, date=, chain=| Create a new ledger or change to specified version   | 
 | ENTITY                | eid=                  | name=, addr=, chain=| Create a new entity in the ledger                    |
 | RESOURCE              | rid=, qty=, eid=      | name=               | Create a new resource in the ledger with initial assignment and quantity allocation |
-| TRANSFER              | from=, to=, rid=, qty=| date=               | Move an allocation of resource from one entity to another entity |
+| TRANSFER              | from=, to=, rid=, qty=| date=.              | Move an allocation of resource from one entity to another entity |
 | UPDATE                | type=, id=,           | name=, addr=, chain=| Update at least one of the optional arguments for an entity, resource, or the ledger |
 | MESSAGE               | msg=, eid=            |                     | Create a message to be sent to an entity's address, handled by a VSP.  VSP should provide confirmation response when complete. |
 | COMMENT               | msg=                  | txn=, chain=, replyto=| Create a generic comment about any transaction on any chain, can also reply to a previously made comment using chain's txn id |
 | PERMIT                | level=, addr=, chain= |                    | Specify access permissions to this ledger for an address on a particular chain (e.g. one or more VSPs on main chain or even an address from a virtual chain) |
+
+### Commands and arguments used by a bitcoin address to interact with a VSP, to trigger SLP ledger entry
+| 8-byte Command Prefix | Required Arguments      | Optional Arguments  | Description                                        |
+|:---------------------:|:-----------------------:|:-------------------:|:---------------------------------------------------|
+| TRANSFER              | to=, qty=, chain=       | rid=                | Move an allocation of resource from one entity to another entity |
 
 ### Argument requirements
 | Argument          | Type      | Encoding  | Bytes   | Representation                                                      |
@@ -116,10 +121,10 @@ The initial version of SLP designed for simple human readable ledger entries wit
 | rid=              | number    |  bytes    | 2 max   | representing up to 65536 possible resource ids in a single ledger   |
 | qty=              | number    |  bytes    | 4 max   | big enough to hold bit                                              |
 | name=, to=, from= | string    |  ascii    | 100 max | large enough to hold a bitcoin cash address as name plus some       |
-| chain=            | string    |  ascii    | 10 max  | moniker for ledger or addr's blockchain(e.g. bitcoincash, etherium) |
+| chain=            | string    |  ascii    | 10 max  | moniker for ledger or addr's blockchain name                        |
 | addr=             | string    |  ascii    | 100 max | blockchain address associated with the entity                       |
 | type=             | string    |  ascii    | 8 max   | can be one of: entity, resource, ledger                             |
-| level=            |           |           |         | permissions access level to ledger can be one of: TBD               |
+| level=            | TBD       |  TBD      | TBD     | permissions access level to SLP ledger can be one of: ...           |
 
 ### Collision checking between the user's desired values and the arguments that may need parsed. This will ensure a valid SLP entry
 | Argument |  Hex from ASCII | Byte count |  
@@ -135,7 +140,7 @@ The initial version of SLP designed for simple human readable ledger entries wit
 | addr=    | 616464723d      |     5      |
 | chain=   | 636861696e3d    |     6      |
 | type=    | 747970653d      |     5      | 
-| level=   |                 |     6      |
+| level=   | 6c6576656c3d    |     6      |
 
 ### Commands to be sent from a special address maintained by a validation service for the SLP protocol.
 | 8-byte Command Prefix | Required Arguments | Optional Arguments  | Description |
