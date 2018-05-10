@@ -2,7 +2,7 @@
 
 This specification defines a protocol for using a single blockchain address as a ledger for tracking resources on a blockchain.  Any quantifiable resource allocated between any number of entities can be tracked using a single blockchain address.  The protocol is designed to be used with the Bitcoin Cash OP_RETURN space as a human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).
 
-SLP can be used as a method to issue and transfer "colored" coins or create and maintain virtual blockchain containing one or more digital assets.  These goals can be accomplished by using an internal SLP ledger to track creation, destruction, and transfer of its own digital assets between holding entities.
+SLP can be used as a method to issue and transfer colored coins or create and maintain a virtual blockchain that contains one or more digital assets.  These goals can be accomplished by using an internal SLP ledger to track creation, destruction, and transfer of digital assets between the public keys or addresses holding an asset.
 
 As part of the SLP project a public registry will be created to where virtual blockchains and colored coins using SLP can publish their address if desired.  The public registry will promote interoperability between virtual blockchains utilizing SLP.  The registry itself will be a SLP ledger and during the registration process each virtual chain's SLP address will be registered and a unique moniker may be provided.  This public registry will be relied upon by virtual blockchains for promoting interoperability between virtual chains. 
 
