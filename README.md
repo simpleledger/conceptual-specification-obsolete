@@ -22,15 +22,18 @@ The VSP should first provide protocol validation prior to making a SLP ledger tr
 * Manage and track balances and payments of multiple loans or accounts receivable
 * Store a public registry of various entities and resources
 
-### Transfer of Digital Assets
-To obtain a new issuance of an SLP asset you may simply send BCH (or the main blockchain's asset) to the SLP address owned by the colored coin or virtual blockchain of interest.  In return the VSP that is maintaining the SLP ledger will detect your transaction and assign its digital asset to your address.
+### Obtaining New SLP Digital Assets
+To obtain a new issuance of an SLP asset you may simply send BCH to the SLP address owned by the colored coin or virtual blockchain of interest.  In return the responsible VSP maintaining the associated SLP ledger will detect your transaction and assign its digital asset to your bitcoin address within its SLP ledger.  You will be issued digital asset at an exchange rate that is published by the colored coin, VSP, on the public registry, or fair market value.  If your transaction does not meet minimum requirements (such as price or there is no new asset available to issue) then the VSP can respond back using an appropriate OP_RETURN error message that your SLP compliant wallet can detect.
 
-### A Zero-balance Bitcoin Address Can Still Hold SLP Assets
+### Transferring SLP Digital Assets
+To transfer the digital asset you can use an SLP compliant web service or offline wallet that is aware of your asset holdings (using the public registry to look up SLP ledgers) and will allow you to transfer your digital asset using an OP_RETURN command such as `TRANSFER chain=<SLP ledger address or moniker> to=<recipeint addr>`.
+
+### A Zero-balance Bitcoin Address Still Holds SLP Assets
 SLP allows you to hold an infinite number of digital assets even with a zero balance at your bitcoin address.  This is because the each SLP compliant asset maintains its own ledger which records and indicates how much asset you own.  You only need to maintain a balance at your bitcoin address if you would need to make an SLP asset transfer in order to satisfy the underlying bitcoin cash network transaction requirements.  This is a significant improvement over other protocols where colored coins can be lost if the colored coins are used as inputs in a transaction which isn't a transfer transaction, their value is lost, it is not transferred to outputs of this or other transaction. Also the value of EPOBC colored coins might be lost in a malformed transaction.  With SLP a malformed transaction would just simply be ignored by the VSP responsible for maintaining the colored coin's ledger.
 
 ### Terms and Definitions:
-| Term     | Definition                                                                                                                |
-|----------|---------------------------------------------------------------------------------------------------------------------------|
+| Term     | Definition                                                                                                      |
+|----------|-----------------------------------------------------------------------------------------------------------------|
 | Ledger   | A series of immutable entries with prefixes and fields defined in this protocol                      |
 | Resource | A quantifiable item, object, asset, or liability (e.g., company shares, products, digital assets) being held by an entity |
 | Entity   | A person, place, thing or category that resources are allocated to                               |
