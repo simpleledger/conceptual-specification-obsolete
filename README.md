@@ -2,7 +2,9 @@
 
 This specification defines a protocol for using a single blockchain address as a ledger for tracking resources on a blockchain.  Any quantifiable resource allocated between any number of entities can be tracked using a single blockchain address.  The protocol is designed to be used with the Bitcoin Cash OP_RETURN space as a human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).
 
-As part of the SLP project a public registry will be created to track virtual blockchains using SLP.  The public registry will promote interoperability between virtual blockchains utilizing SLP.  The registry itself will be a SLP ledger and during the registration process each virtual chain's SLP address will be registered and a unique moniker may be provided.  This public registry will be relied upon by virtual blockchains for promoting interoperability between virtual chains. Any virtual blockchain may use an internal SLP ledger to track creation, destruction, and transfer of its own digital assets between holding entities.
+SLP can be used as a method to issue and transfer "colored" coins or create and maintain virtual blockchain containing one or more digital assets.  These goals can be accomplished by using an internal SLP ledger to track creation, destruction, and transfer of its own digital assets between holding entities.
+
+As part of the SLP project a public registry will be created to where virtual blockchains and colored coins using SLP can publish their address if desired.  The public registry will promote interoperability between virtual blockchains utilizing SLP.  The registry itself will be a SLP ledger and during the registration process each virtual chain's SLP address will be registered and a unique moniker may be provided.  This public registry will be relied upon by virtual blockchains for promoting interoperability between virtual chains. 
 
 ## Introduction and Purpose
 There are many useful business cases where only a single person or group is responsible for keeping track of items, and the data is also relied upon by others.  In these cases, having an immutable record of historical events is often just as important as knowing the current allocation state of resources.  For such purposes having a simple protocol for immutable bookkeeping of resources on a blockchain is defined herein.
@@ -20,16 +22,22 @@ The VSP should first provide protocol validation prior to making a SLP ledger tr
 * Manage and track balances and payments of multiple loans or accounts receivable
 * Store a public registry of various entities and resources
 
+### Transfer of Digital Assets
+To obtain a new issuance of an SLP asset you may simply send BCH (or the main blockchain's asset) to the SLP address owned by the colored coin or virtual blockchain of interest.  In return the VSP that is maintaining the SLP ledger will detect your transaction and assign its digital asset to your address.
+
+### A Zero-balance Bitcoin Address Can Still Hold SLP Assets
+SLP allows you to hold an infinite number of digital assets even with a zero balance at your bitcoin address.  This is because the each SLP compliant asset maintains its own ledger which records and indicates how much asset you own.  You only need to maintain a balance at your bitcoin address if you would need to make an SLP asset transfer in order to satisfy the underlying bitcoin cash network transaction requirements.  This is a significant improvement over other protocols where colored coins can be lost if the colored coins are used as inputs in a transaction which isn't a transfer transaction, their value is lost, it is not transferred to outputs of this or other transaction. Also the value of EPOBC colored coins might be lost in a malformed transaction.  With SLP a malformed transaction would just simply be ignored by the VSP responsible for maintaining the colored coin's ledger.
+
 ### Terms and Definitions:
 | Term     | Definition                                                                                                                |
 |----------|---------------------------------------------------------------------------------------------------------------------------|
-| Ledger   | A series of immutable entries with prefixes and fields defined in this protocol                                           |
+| Ledger   | A series of immutable entries with prefixes and fields defined in this protocol                      |
 | Resource | A quantifiable item, object, asset, or liability (e.g., company shares, products, digital assets) being held by an entity |
-| Entity   | A person, place, thing or category that resources are allocated to                                                        |
-| Transfer | Indicates movement of a resource between the defined entities                                                             |
-| Void     | Indicates a previously made transaction should be ignored in the ledger calculation                                       |
-| Update   | Indicates updating of field data for a particular entity or resource                                                      |
-| Validation Service Provider | A company that is validating transaction compliance with the SLP protocol                              |
+| Entity   | A person, place, thing or category that resources are allocated to                               |
+| Transfer | Indicates movement of a resource between the defined entities                                            |
+| Void     | Indicates a previously made transaction should be ignored in the ledger calculation                  |
+| Update   | Indicates updating of field data for a particular entity or resource          |
+| Validation Service Provider | A company that is validating transaction compliance with the SLP protocol. |                          | Colored Coins | Colored coins and Virtual Blockchains are loosely defined terms for systems that issues transferable digital assets on an existing host blockchain. SLP is just one protocol that can be used to build and maintain either of these. |
 
 ### Simplest Example
 
