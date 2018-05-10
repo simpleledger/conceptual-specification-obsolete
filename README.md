@@ -113,9 +113,6 @@ Multiple outputs with OP_RETURN included in their script provides additional dat
 ### Virtual Chain Registry (https://virtualchain.cash)
 The SLP will provide a public registry of identifiers so that various blockchains, virtual blockchains, and colored coins can be referenced efficiently in an SLP transaction.  This public registry itself will be stored at a single bitcoin address using the SLP with it's key maintained by a VSP.  For a small fee anyone will be allowed to register their virtual blockchain's moniker on this registry.
 
-### Inter-ledger communications (still needs deep thought)
-SLP requires that any address using SLP shall ignore any OP_RETURN outputs that come from unapproved addresses. In other words, by default only ledger entries that have come from the same address should be included.  Otherwise, someone could easily mess up your ledger by just sending OP_RETURN messages to your address.  Nothing except transaction fees would detour someone from sending OP_RETURN messages to your address if they wanted to.  VSP following SLP will know to ignore addresses that have not been recorded in your ledger with permissions.
-
 ## SLP Version 0
 
 The initial version of SLP designed for simple human readable ledger entries within 220-bytes.  
