@@ -52,7 +52,7 @@ The weak part of this SLP system is the VSP holding the private key to the SLP l
 | Void     | Indicates a previously made transaction should be ignored in the ledger calculation                           |
 | Update   | Indicates updating of field data for a particular entity or resource                                          |
 | Validation Service Provider | Software that is validating transaction compliance with the SLP protocol. |                        
-| Colored Coins and Virtual Blockchains | Colored coins and Virtual Blockchains are loosely defined terms for systems that issues transferable digital assets on an existing host blockchain. SLP is just one protocol that can be used to build and maintain either of these. |
+| Colored Coins and Virtual Blockchains | Colored coins and Virtual Blockchains are loosely defined terms for systems that can issue and transferable digital assets on an existing host blockchain. The SLP is just one protocol that can be used to build and maintain either of these. Interoperability can be achieved between virtual chains by using SLP as a common language or interface. |
 
 ### Simplest Example
 
