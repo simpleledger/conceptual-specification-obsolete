@@ -18,6 +18,7 @@ The VSP should first provide protocol validation prior to making a SLP ledger tr
 ### Example Use Cases (using a single bitcoin address):
 * Track multiple types of blockchain assets (e.g., colored coins and virtual chain assets)
 * Maintain a company's stock ledger with multiple types/series of stock
+* Issuing and Holding Event Tickets
 * Track inventory for multiple products
 * Voting
 * Manage and track balances and payments of multiple loans or accounts receivable
