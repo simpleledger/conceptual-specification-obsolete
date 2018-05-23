@@ -4,12 +4,12 @@ This specification defines a protocol for using a single blockchain address as a
 
 SLP can be used as a method to issue and transfer colored coins or create and maintain a virtual blockchain that contains one or more digital assets.  These goals can be accomplished by using an internal SLP ledger to track creation, destruction, and transfer of digital assets between the public keys or addresses holding an asset.
 
-As part of the SLP project a public registry will be created to where virtual blockchains and colored coins following SLP can publish their address if desired.  The public registry will promote interoperability between assets utilizing SLP and any wallet or web service following SLP can check current state for any SLP asset.  The registry itself will be stored within a SLP ledger. During the registration process each SLP ledger's address will be registered and a unique moniker may be provided.  This public registry will be relied upon by virtual blockchains for promoting interoperability between virtual chains. SLP can work without the registry, but the registry will provide a unique moniker, analogous to a DNS, to protect the holder in case the SLP ledger address is changed.
+As part of the SLP project a public registry will be created to where SLP ledgers can publish their address if desired.  The public registry should simplify usage of SLP interoperability between assets utilizing SLP and any wallet or web service following SLP can check current state for any SLP asset.  The registry itself will be stored within a SLP ledger. During the registration process each SLP ledger's address will be registered and a unique moniker may be provided.  This public registry will be relied upon by virtual blockchains for promoting interoperability between virtual chains. SLP can work without the registry, but the registry will provide a unique moniker, analogous to a DNS, to protect the holder in case the SLP ledger address is changed.
 
 ## Introduction and Purpose
 There are many useful business cases where only a single person or group is responsible for keeping track of items, and the data is also relied upon by others.  In these cases, having an immutable record of historical events is often just as important as knowing the current allocation state of resources.  For such purposes having a simple protocol for immutable bookkeeping of resources on a blockchain is defined herein.
 
-An important part of any computerized bookkeeping system is the prevention of errors that exist within the ledger's entries.  To that end, SLP provides specific guidelines for a Validation Service Provider (VSP) to check the state and validity of a SLP ledger, and to also create and detect valid SLP ledger transactions.  The VSP is a critical component for SLP ledgers that have any importance.
+A service that implements SLP in order to create SLP transactions, detect SLP transactions, and calculate the current state of a SLP ledger will be referred to as a Validation Service Provider (VSP). Managing a SLP ledger without a VSP would be very difficult, requiring manual entry into OP_RETURN without any validation, so the VSP is a critical component for SLP ledgers.  
 
 A virtual blockchain may use SLP as a method to keep track of its own state.  If many virtual blockchains utilize SLP and the public SLP registry the ability for virtual blockchains to interoperate will be enhanced since VSPs can be built to be aware of other virtual chains. Each virtual blockchain or colored coin may want to build and run its own VSP implementation in order to handle the customized requirements of that particular chain, like interoperability.  VSPs will either be built to be general purpose or highly specialized.  General purpose and basic VSPs may allow someone to simply create their own colored coin and SLP ledger that is managed by a third party VSP.
 
@@ -30,7 +30,7 @@ To obtain a new issuance of an SLP asset you may simply send BCH (without any OP
 ### Transferring SLP Digital Assets
 To transfer the digital asset, you can use an SLP compliant wallet (e.g., a web service or downloadable wallet).  The SLP compliant wallet will scan SLP ledgers that you have previously interacted with so that it can be aware of your asset holdings.  Once the wallet is aware of your holdings it can use the SLP OP_RETURN commands to transfer your digital asset to any address.  The digital asset's SLP address may even accept a buy back of the digital asset using an exchange rate.  
 
-If a wallet is not SLP compliant but allows manual OP_RETURN messages then you can do the transfer manually by typing the SLP command `TRANSFER chain=<SLP address or public moniker> qty=# to=<recipient addr>` within the OP_RETURN message space.  Using a public moniker that is set at the SLP public registry, analogous to a DNS, will be the recommended method for getting the SLP's correct address.
+If a wallet is not SLP compliant but allows manual OP_RETURN message entry, then you can perform a transfer manually by typing the SLP command `TRANSFER chain=<SLP address or public moniker> qty=# to=<recipient addr>` within the OP_RETURN message space.  Using a public moniker that is set at the SLP public registry, analogous to a DNS, will be the recommended method for getting the SLP's correct bitcoin address.
 
 ### A Zero-balance Bitcoin Address Can Still Hold SLP Assets
 SLP allows you to hold an infinite number of digital assets even with a zero balance at your bitcoin address.  This is because the each SLP compliant asset maintains its own ledger which records and indicates how much asset you own.  You only need to maintain a balance at your bitcoin address if you would need to make an SLP asset transfer in order to satisfy the underlying bitcoin cash network transaction requirements.  This is a significant improvement over protocols where colored coins can be lost if the colored coins are used as inputs in a transaction which isn't a transfer transaction, their value is lost, it is not transferred to outputs of this or other transaction.
@@ -104,7 +104,7 @@ Encryption of fields containing sensitive name or quantity data (i.e., name=, qt
 SLP defines voiding of resource transfers and renaming of entities and resources so that they can be displayed nicely in the ledger's current state.
 
 ### Upgrading a ledger's protocol version
-Any ledger utilizing a particular SLP version can change to another SLP version by simply using the LEDGER command again with the desired version specified.  Since the blockchain economics and protocol capibilities will change over time it will be important to be able to switch to a different SLP version.  For example, if many ledger entries are being made through an API then transactions may be expensive so a much less verbose SLP protocol will be desired to reduce cost.  Another scenario may be that one protocol version may have more features than another.  
+Any ledger utilizing a particular SLP version can change to another SLP version by simply using the LEDGER command again with the desired version specified.  Since the blockchain economics and protocol capabilities will change over time it will be important to be able to switch to a different SLP version.  For example, if many ledger entries are being made through an API then transactions may be expensive so a much less verbose SLP protocol will be desired to reduce cost.  Another scenario may be that one protocol version may have more features than another.  
 
 ### Timestamps
 A transaction or transfer of resources that happens in the real world will likely occur at a different time from when the associated ledger entry is made on the blockchain.  For this reason, an optional timestamp field can be included for TRANSFER entries.  
@@ -112,15 +112,20 @@ A transaction or transfer of resources that happens in the real world will likel
 ### Multiple OP_RETURN Spaces
 Multiple outputs with OP_RETURN included in their script provides additional data storage.  The protocol will utilize multiple transaction output in some cases as appropriate.
 
-### Virtual Chain Registry (https://virtualchain.cash)
-The SLP will provide a public registry of identifiers so that various blockchains, virtual blockchains, and colored coins can be referenced efficiently in an SLP transaction.  This public registry itself will be stored at a single bitcoin address using the SLP with it's key maintained by a VSP.  For a small fee anyone will be allowed to register their virtual blockchain's moniker on this registry.
+### Simple Ledger Registry (https://simpleledger.cash)
+The SLP will provide a public registry of unique monikers, each associated with a bitcoin cash address being used for an SLP ledger.  It will be possible to change the bitcoin cash address associated with a unique moniker if required (e.g., if the private keys of an SLP address have been compromised).  Changing the bitcoin cash address will a special procedure for the registrant to follow in order to help guard against high jacking an SLP ledger's unique moniker.
 
 ### Detecting Problems with a Ledger's VSP
 The protocol will require that each SLP ledger publish an "is active" OP_RETURN signal at a certain interval so that anyone who is subscribing to updates from the ledger will know if there is a problem with the VSP associated with the ledger.
 
-## SLP Version 0
+## SLP Specification
 
-The initial version of SLP designed for simple human readable ledger entries within 220-bytes.  
+The initial version of SLP designed to be human-readable ledger entries less than 220-bytes.  
+
+### Prefix
+The SLP will use a prefix of 0x00534c50.  Following the spirit of human-readability, this hex translates to ASCII as "SLP".  Having a consistent prefix will allow blockchain explorers to simply identify SLP related transactions so they can provide a simple URL pointing to http://simpleledger.cash/txn/{txn_id} where the transaction to be fully parsed and recognized. After the redirect has occurred the Simple Ledger registry can automatically provide a redirect to the SLP implementation's website can be provided.
+
+For collision avoid and BCH blockchain explorers whom want to detect many OP_RETURN protocols SLP is registered with [Lokad's Terab Project](https://github.com/Lokad/Terab/blob/master/etc/protocols.csv).
 
 ### Commands and arguments used by a VSP to maintain a SLP ledger
 | 8-byte Command Prefix | Required Arguments    | Optional Arguments  | Description                                          |
