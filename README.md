@@ -2,7 +2,13 @@
 
 This specification defines a protocol for using a single blockchain address as a ledger for tracking resources on a blockchain.  Any quantifiable resource allocated between any number of entities can be tracked using a single blockchain address.  The protocol is designed to be used with the Bitcoin Cash OP_RETURN space as a human readable payload when decoded from bytes to ASCII. The protocol can be implemented on any blockchain that provides ample room for data entry (e.g., the Bitcoin Cash blockchain provides 220-byte OP_RETURN data allowance as of May 15, 2018).
 
-SLP can be used as a method to issue and transfer colored coins or create and maintain a virtual blockchain that contains one or more digital assets.  These goals can be accomplished by using an internal SLP ledger to track creation, destruction, and transfer of digital assets between the public keys or addresses holding an asset.
+SLP can be used in three different modes:
+
+* **As a general purpose numerical ledger:**  In this SLP mode the all numerical values transfered between entities can be combined to arrive at a current ledger's numerical state.  This ledger can be shared with others for viewing by simply sharing the ledger's bitcoin address.
+
+* **As a general purpose moniker ledger (like your own DNS):** In this SLP mode new entities can be created to associate their bitcoin cash addresses with a particular moniker.  A valid signature will be required in a special signature field (i.e. sig=<chosen moniker message signature here> ) and the most recently signed moniker with a particular address can be used.  This could be used to create your own DNS listing, where the DNS is identified by the SLP ledger's addresses.  If a new protocol were to adopt this SLP protocol for associating unique monikers with bitcoin addresses, then an implementation could easily determine which SLP address to use by finding the most recenent moniker with a valid signature and then use the address stored at the addr= field.  In other words there may be many moniker ledgers in the future all stored on chain, not just one. A community may come to a consensus about which SLP ledger address they want to use to convert between , perhaps it will be the SLP ledger managed by https://bch.sx website. 
+  
+* **It can be used for colored coins:** In this SLP mode the ledger can be used as a method to issue and transfer colored coins or create and maintain a virtual blockchain that contains one or more digital assets.  These goals can be accomplished by using an internal SLP ledger to track creation, destruction, and transfer of digital assets between the public keys or addresses holding an asset.  In a strict digital asset mode, signatures can be required during asset transfers initiated by the holder.
 
 As part of the SLP project a public registry will be created to where SLP ledgers can publish their address if desired.  The public registry should simplify usage of SLP interoperability between assets utilizing SLP and any wallet or web service following SLP can check current state for any SLP asset.  The registry itself will be stored within a SLP ledger. During the registration process each SLP ledger's address will be registered and a unique moniker may be provided.  This public registry will be relied upon by virtual blockchains for promoting interoperability between virtual chains. SLP can work without the registry, but the registry will provide a unique moniker, analogous to a DNS, to protect the holder in case the SLP ledger address is changed.
 
@@ -56,15 +62,15 @@ The weak part of this SLP system is the VSP holding the private key to the SLP l
 | Validation Service Provider | Software that is validating transaction compliance with the SLP protocol. |                        
 | Colored Coins and Virtual Blockchains | Colored coins and Virtual Blockchains are loosely defined terms for systems that can issue and transferable digital assets on an existing host blockchain. The SLP is just one protocol that can be used to build and maintain either of these. Interoperability can be achieved between virtual chains by using SLP as a common language or interface. |
 
-### Simplest Example
+### Example for Numerical Mode (Simple)
 
-| Entry # | Command  | Arguments                           |
-|---------|----------|-------------------------------------|
-| 1       | LEDGER   | slpver=1,name=ABC Inventory         |
-| 2       | ENTITY   | eid=1,name=CompanyABC               |
-| 3       | RESOURCE | rid=1,name=WidgetA,qty=100000,eid=1 |
-| 4       | ENTITY   | eid=2,name=XYZ Inc.                 |
-| 5       | TRANSFER | rid=1,from=1,to=2,qty=30000         |
+| Entry/Txn | Command  | Arguments                                   |
+|---------|----------|-----------------------------------------------|
+| 1       | LEDGER   | mode=numerical, slpver=1, name=ABC Inventory  |
+| 2       | ENTITY   | eid=1,name=CompanyABC                         |
+| 3       | RESOURCE | rid=1,name=WidgetA,qty=100000,eid=1           |
+| 4       | ENTITY   | eid=2,name=XYZ Inc.                           |
+| 5       | TRANSFER | rid=1,from=1,to=2,qty=30000                   |
 
 #### Resulting ledger calculated by a software application
 
@@ -72,9 +78,9 @@ The weak part of this SLP system is the VSP holding the private key to the SLP l
 |:-------:|:----------:|:--------:|
 | WidgetA |    70000   |   30000  |
 
-### Advanced Example (non-digital resources)
+### Example for Numerical Mode (Advanced)
 
-| Entry # | Command  | Arguments                                             |
+| Entry/Txn| Command | Arguments                                             |
 |---------|----------|-------------------------------------------------------|
 | 1       | LEDGER   | slpver=1,name=ABC Inventory                           |
 | 2       | ENTITY   | eid=1,name=CompanyABC                                 |
@@ -96,6 +102,20 @@ The weak part of this SLP system is the VSP holding the private key to the SLP l
 | WidgetA |    70000   |   30000  |      0     |
 | WidgetB |     75     |     0    |     25     |
 |  BarFoo |    1000    |     0    |    5000    | 
+
+### Example for Moniker Mode (e.g., Like for your own DNS for BCH addresses)
+| Entry/Txn | Command  | Arguments                                          |
+|-----------|----------|----------------------------------------------------|
+| 1         | LEDGER   | mode=moniker, slpver=1, name=MyOwnBCHDNS           |
+| 2         | ENTITY   | name=com.deskviz, addr=qsdoifjs..., sig=aSig...    |
+| 3         | ENTITY   | name=com.bitcoin, addr=qasdddjs..., sig=aSig2...   |
+| 4         | ENTITY   | name=sx.bch, addr=qfsddfjs..., sig=aSig...         |
+| 5         | ENTITY   | name=com.deskviz, addr=newaddr..., sig=aNewSig...  |  
+  
+Note: Transaction #5 would replace the address for moniker created at Transaction #2.
+  
+### Colored Coin Mode Example
+Coming soon.
 
 ### Resource & Entity Genisis IDs
 Identifiers for resources and entities will be implied to be the transaction hash associsted with the genisis of the resource or entity entry.  This will ensure unique ID generation and also elliminate the need to explicitly provide an ID within the OP_RETURN space when generating new resources or entities. If a name, address, or moniker fields are provided within the associated entity's genisis then the GUI may display the name, address, or moniker instead of the entity's transaction hash.  Likewise, if the name field is provided for the associted resource's genisis the GUI may display the name of the resource instead of the resource's genisis transaction hash.
