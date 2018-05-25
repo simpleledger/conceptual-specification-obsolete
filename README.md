@@ -97,6 +97,9 @@ The weak part of this SLP system is the VSP holding the private key to the SLP l
 | WidgetB |     75     |     0    |     25     |
 |  BarFoo |    1000    |     0    |    5000    | 
 
+### Resource & Entity Genisis IDs
+Identifiers for resources and entities will be implied to be the transaction hash associsted with the genisis of the resource or entity entry.  This will ensure unique ID generation and also elliminate the need to explicitly provide an ID within the OP_RETURN space when generating new resources or entities. If a name, address, or moniker fields are provided within the associated entity's genisis then the GUI may display the name, address, or moniker instead of the entity's transaction hash.  Likewise, if the name field is provided for the associted resource's genisis the GUI may display the name of the resource instead of the resource's genisis transaction hash.
+
 ### Privacy on a Public Blockchain using Encryption
 Encryption of fields containing sensitive name or quantity data (i.e., name=, qty= fields) is possible using a combination of asymmetric keys and symmetric keys.  This feature will allow someone to maintain an encrypted ledger with the ability to share only selected transaction data with third-parties using a passcode.  Everyone will be able to see the command, but the certain field data can be hidden with a password.
 
@@ -112,8 +115,8 @@ A transaction or transfer of resources that happens in the real world will likel
 ### Multiple OP_RETURN Spaces
 Multiple outputs with OP_RETURN included in their script provides additional data storage.  The protocol will utilize multiple transaction output in some cases as appropriate.
 
-### Simple Ledger Registry (https://simpleledger.cash)
-The SLP will provide a public registry of unique monikers, each associated with a bitcoin cash address being used for an SLP ledger.  It will be possible to change the bitcoin cash address associated with a unique moniker if required (e.g., if the private keys of an SLP address have been compromised).  Changing the bitcoin cash address will a special procedure for the registrant to follow in order to help guard against high jacking an SLP ledger's unique moniker.
+### Simple Ledger Registry (http://simpleledger.cash)
+The SLP will eventually provide a public registry of unique monikers, each associated with a bitcoin cash address being used either as a SLP ledger or as a token holder.  This will make it easier to create SLP transactions by using the published SLP moniker instead of the full address.  It will be possible to change the bitcoin cash address associated with a unique moniker if required (e.g., if the private keys of an SLP address have been compromised).  Changing the bitcoin cash address will a special procedure for the registrant to follow in order to help guard against high jacking an SLP ledger's unique moniker.
 
 ### Detecting Problems with a Ledger's VSP
 The protocol will require that each SLP ledger publish an "is active" OP_RETURN signal at a certain interval so that anyone who is subscribing to updates from the ledger will know if there is a problem with the VSP associated with the ledger.
