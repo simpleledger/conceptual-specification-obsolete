@@ -1,6 +1,6 @@
 # Simple Ledger Protocol (SLP) Specification - Draft
 
-This specification defines a protocol for using a single Bitcoin Cash address as a general-purpose ledger which can be used in a number of interesting modes.  In `numerical` and `token` modes, the allocation of multiple quantifiable resources can be assigned between a number of entities, whom may be represented by participating bitcoin cash addresses in `token` mode.  In `label` and `moniker` modes, text based data can be associated with unique bitcoin cash addresses or transaction hashes.  In `lookup` mode, participating bitcoin cash addresses can be stored as individual entities, and then text-based data can be looked up from each participating bitcoin cash addresses.  In all modes the SLP ledger is centrally managed by a trusted party.  Implementations would simply construct a ledger's current state by examining the series of a human-readable SLP payloads at a ledger's address.
+This specification defines a protocol for using a single Bitcoin Cash address as a general-purpose ledger which can be used in a number of interesting modes.  In `numerical` and `token` modes, the allocation of multiple quantifiable resources can be assigned between a number of entities, whom may also be represented by participating bitcoin cash addresses.  In `moniker` and `label` modes, text-based name resources can be associated with unique bitcoin cash addresses or transaction hashes.  In `lookup` mode, participating bitcoin cash addresses can be stored as individual entities, and then text-based resources can be looked up from each bitcoin cash address listed within the ledger.  In all SLP modes the ledger address is owned and managed by an oracle service.  Implementations would simply construct a ledger's current state by examining the series of a human-readable SLP payloads at a ledger's address.
 
 Here is a brief description of each of the SLP modes:
 
@@ -8,7 +8,7 @@ Here is a brief description of each of the SLP modes:
 
 * **Token Mode:** In the `token` SLP mode the ledger would function just like the `numerical` mode, except bitcoin cash addresses would be required for each entity and digital signatures would be used to provide a written notice for asset transfer.  This would be a **centralized** method to issue and transfer tokens to individual bitcoin addresses, and this means SLP ledger operators would need to be trusted by the asset holders. The SLP ledger would record all actions related to creation, destruction, and transfer of digital assets between addresses holding an asset.  Signatures could be used to prove the asset holder' written notice for transferring an asset.  And transfers could either be approved or rejected by the SLP ledger owner. Additionally, the transfer could be made without a owner's consent by the SLP ledger operator, and this type of unconsentual transfer would obviously be void of the owner's digital signature for whatever reason (maybe the asset holder lost their private keys).  An excellent use case for this mode would be for a private company's stock ledger, where the Company is ultimately responsible for maintaining its own stock ledger AND the stockholders **should not** be responsible for proving share ownership.  Private corperations are legally required to maintain their own stock ledger in a controlled and centralized manner, which will not likely change.
 
-* **Moniker Mode (DNS-like system for bitcoin addresses)** In the `moniker` SLP mode a unique name can be associated with a particular bitcoin cash address.  This moniker mode could be used to create your own moniker/address datastore, where the datastore is identified by the SLP ledger's address.  Any protocol or software could use SLP for associating unique monikers with bitcoin addresses.  This could provide a DNS-like system for bitcoin addresses that a wallet software could adopt making it easy to memorize addresses.  Uniqueness can be enforced for monikers by using either first-in/first-out (FIFO) or last-in/first-out (LIFO) approach when querying for a moniker record.
+* **Moniker Mode (DNS-like system for bitcoin addresses)** In the `moniker` SLP mode a list of unique names each associated with a bitcoin cash address can be created.  Any software, wallet or otherwise, could implment a simple SLP reader for associating unique monikers with bitcoin addresses.  This could provide a DNS-like system for maping between a unique name and a bitcoin address like an address book for your contacts or trusted oracles.  Uniqueness can be enforced for monikers by using either first-in/first-out (FIFO) or last-in/first-out (LIFO) approach when querying for a moniker record.
 
 * **Label Mode (e.g., native wallet labeling system):** In the `label` SLP mode a there is no uniqueness requirement in the name field, only on .  For example, you could have a bitcoin wallet that dedicates one of its addresses as an SLP ledger that will be used to creating names and labels for all of the other addresses in the wallet.  This same dedicated SLP ledger within the wallet could also be used for creating unique transaction labels.  For some scenarios, like in a wallet, the names/labels fields could be encrypted using the SLP ledger address's public key in order to protect privacy.  This would eliminate the need to use cloud file based-storage for labeling like Trezor relies upon.
 
@@ -25,29 +25,26 @@ There are many useful business cases where only a single person or group is resp
 
 A service that implements SLP in order to create SLP transactions, detect SLP transactions, and calculate the current state of a SLP ledger will be referred to as a Validation Service Provider (VSP). Managing a SLP ledger without a VSP would be very difficult, requiring manual entry into OP_RETURN without any validation, so the VSP is a critical component for SLP ledgers.  
 
-A virtual blockchain may use SLP as a method to keep track of its own state.  If many virtual blockchains utilize SLP and the public SLP registry the ability for virtual blockchains to interoperate will be enhanced since VSPs can be built to be aware of other virtual chains. Each virtual blockchain or colored coin may want to build and run its own VSP implementation in order to handle the customized requirements of that particular chain, like interoperability.  VSPs will either be built to be general purpose or highly specialized.  General purpose and basic VSPs may allow someone to simply create their own colored coin and SLP ledger that is managed by a third party VSP.
-
 The VSP should first provide protocol validation prior to making a SLP ledger transaction, however, post-transaction validation by the VSP should also be performed whenever state is fetched.  If errors are found during a post-transaction validation check (because errors were not properly validated during the pre-transaction check) the VSP should then respond with an appropriate human readable OP_RETURN message so that corrections can be made.  A VSP can be used to examine balances of digital asset addresses and identify differences between actual and expected balances for those digital assets being tracked with an SLP ledger.  
 
 ### Example Use Cases (using a single bitcoin address):
-* Track multiple types of blockchain assets (e.g., colored coins and virtual chain assets)
 * Maintain a company's stock ledger with multiple types/series of stock
-* Issuing and Holding Event Tickets
+* Issuing and holding event tickets
 * Track inventory for multiple products
 * Voting
 * Manage and track balances and payments of multiple loans or accounts receivable
 * Store a public registry of various entities and resources
 
-### Obtaining New SLP Digital Assets
-To obtain a new issuance of an SLP asset you may simply send BCH (without any OP_RETURN needed) to the SLP address owned by the colored coin or virtual blockchain of interest.  In return the responsible VSP maintaining the associated SLP ledger will detect your transaction and assign its digital asset to your bitcoin address within its own SLP ledger.  You will be issued digital asset at an exchange rate that is published by the colored coin, VSP, on the public registry, or using a fair market value.  If your transaction does not meet minimum requirements (such as price or there is no new asset available to issue) then the VSP shall return your funds (less fees) and respond back using an appropriate OP_RETURN error message that your SLP compliant web service or wallet can detect.
+### Obtaining New SLP Tokens
+To obtain a new issuance of an SLP token you may simply send BCH (without any OP_RETURN needed) to the SLP address owned by the token of interest.  In return the responsible VSP maintaining the associated SLP ledger will detect your transaction and assign its digital asset to your bitcoin address within its own SLP ledger.  You will be issued digital asset at an exchange rate that is published by the token, VSP, on the public registry, or using a fair market value.  If your transaction does not meet minimum requirements (such as price or there is no new asset available to issue) then the VSP shall return your funds (less fees) and respond back using an appropriate OP_RETURN error message that your SLP compliant web service or wallet can detect.
 
-### Transferring SLP Digital Assets
+### Transferring SLP Tokens
 To transfer the digital asset, you can use an SLP compliant wallet (e.g., a web service or downloadable wallet).  The SLP compliant wallet will scan SLP ledgers that you have previously interacted with so that it can be aware of your asset holdings.  Once the wallet is aware of your holdings it can use the SLP OP_RETURN commands to transfer your digital asset to any address.  The digital asset's SLP address may even accept a buy back of the digital asset using an exchange rate.  
 
 If a wallet is not SLP compliant but allows manual OP_RETURN message entry, then you can perform a transfer manually by typing the SLP command `TRANSFER chain=<SLP address or public moniker> qty=# to=<recipient addr>` within the OP_RETURN message space.  Using a public moniker that is set at the SLP public registry, analogous to a DNS, will be the recommended method for getting the SLP's correct bitcoin address.
 
-### A Zero-balance Bitcoin Address Can Still Hold SLP Assets
-SLP allows you to hold an infinite number of digital assets even with a zero balance at your bitcoin address.  This is because the each SLP compliant asset maintains its own ledger which records and indicates how much asset you own.  You only need to maintain a balance at your bitcoin address if you would need to make an SLP asset transfer in order to satisfy the underlying bitcoin cash network transaction requirements.  This is a significant improvement over protocols where colored coins can be lost if the colored coins are used as inputs in a transaction which isn't a transfer transaction, their value is lost, it is not transferred to outputs of this or other transaction.
+### A Zero-balance Bitcoin Address Can Still Hold SLP Tokens
+SLP allows you to hold an infinite number of tokens even with a zero balance at your bitcoin address.  This is because the each SLP compliant asset maintains its own ledger which records and indicates how much token you own.  You only need to maintain a balance at your bitcoin address if you would need to make an SLP token transfer in order to satisfy the underlying bitcoin cash network transaction requirements.
 
 ### The Different Roles of a VSP & Security
 A VSP can perform multiple functions to make SLP as useable as possible. At the most basic level a VSP just maintains SLP ledgers and understands the SLP protocol enough to prevent mistakes.  
@@ -67,18 +64,18 @@ The weak part of this SLP system is the VSP holding the private key to the SLP l
 | Transfer | Indicates movement of a resource between the defined entities                                                 |
 | Void     | Indicates a previously made transaction should be ignored in the ledger calculation                           |
 | Update   | Indicates updating of field data for a particular entity or resource                                          |
-| Validation Service Provider | Software that is validating transaction compliance with the SLP protocol. |                        
-| Colored Coins and Virtual Blockchains | Colored coins and Virtual Blockchains are loosely defined terms for systems that can issue and transferable digital assets on an existing host blockchain. The SLP is just one protocol that can be used to build and maintain either of these. Interoperability can be achieved between virtual chains by using SLP as a common language or interface. |
+| Validation Service Provider | A custom full-node implementation that is validating SLP transactions and oracle service for ledger addresses it owns or manages  |                          
 
-### Example for Numerical Mode (Simple)
 
-| Entry/Txn | Command  | Arguments                                   |
-|---------|----------|-----------------------------------------------|
-| 1       | LEDGER   | mode=numerical, slpver=1, name=ABC Inventory  |
-| 2       | ENTITY   | eid=1,name=CompanyABC                         |
-| 3       | RESOURCE | rid=1,name=WidgetA,qty=100000,eid=1           |
-| 4       | ENTITY   | eid=2,name=XYZ Inc.                           |
-| 5       | TRANSFER | rid=1,from=1,to=2,qty=30000                   |
+### Example Numerical Mode (Simple)
+
+| Entry/Txn | Command  | Arguments                                     |
+|-----------|----------|-----------------------------------------------|
+| 1         | LEDGER   | mode=numerical, slpver=1, name=ABC Inventory  |
+| 2         | ENTITY   | eid=1,name=CompanyABC                         |
+| 3         | RESOURCE | rid=1,name=WidgetA,qty=100000,eid=1           |
+| 4         | ENTITY   | eid=2,name=XYZ Inc.                           |
+| 5         | TRANSFER | rid=1,from=1,to=2,qty=30000                   |
 
 #### Resulting ledger calculated by a software application
 
@@ -86,7 +83,7 @@ The weak part of this SLP system is the VSP holding the private key to the SLP l
 |:-------:|:----------:|:--------:|
 | WidgetA |    70000   |   30000  |
 
-### Example for Numerical Mode (Advanced)
+### Example Numerical Mode (Advanced)
 
 | Entry/Txn| Command | Arguments                                             |
 |---------|----------|-------------------------------------------------------|
@@ -107,23 +104,32 @@ The weak part of this SLP system is the VSP holding the private key to the SLP l
 #### Resulting ledger calculated by a software application
 |         | CompanyABC | XYZ Inc. | Global Inc |
 |:-------:|:----------:|:--------:|:----------:|
-| WidgetA |    70000   |   30000  |      0     |
-| WidgetB |     75     |     0    |     25     |
-|  BarFoo |    1000    |     0    |    5000    | 
+| WidgetA |    70000   |   30000  |      -     |
+| WidgetB |     75     |     -    |     25     |
+|  BarFoo |    1000    |     -    |    5000    | 
 
-### Example for Moniker Mode (e.g., Like for your own DNS for BCH addresses)
-| Entry/Txn | Command  | Arguments                                          |
-|-----------|----------|----------------------------------------------------|
-| 1         | LEDGER   | mode=moniker, slpver=1, name=MyOwnBCHDNS           |
-| 2         | ENTITY   | name=com.deskviz, addr=qsdoifjs..., sig=aSig...    |
-| 3         | ENTITY   | name=com.bitcoin, addr=qasdddjs..., sig=aSig2...   |
-| 4         | ENTITY   | name=sx.bch, addr=qfsddfjs..., sig=aSig...         |
-| 5         | ENTITY   | name=com.deskviz, addr=newaddr..., sig=aNewSig...  |  
+### Example Moniker Mode (e.g., Like for your own DNS-like naming system for )
+| Entry/Txn | Command  | Arguments                                |
+|-----------|----------|------------------------------------------|
+| 1         | LEDGER   | mode=moniker, slpver=1, name=MyOracles   |
+| 2         | ENTITY   | name=ComanyXYZ, addr=qsdoifjs...         |
+| 3         | RESOURCE | txn=2 name=tabs.cash qty=1               |
+| 4         | ENTITY   | name=XYZ Inc., addr=qasdddjs...          |
+| 5         | RESOURCE | txn=4 name=bets.cash qty=1               |
+| 6         | ENTITY   | name=Global Inc, addr=qfsddfjs...        |
+| 7         | RESOURCE | txn=6 name=global.com qty=1              |
+
+#### Resulting monkiker ledger calculated by a softwar application
+|             | CompanyXYZ | XYZ Inc. | Global Inc |
+|:-----------:|:----------:|:--------:|:----------:|
+| tabs.cash   |     1      |     -    |      -     |
+| bets.cash   |     -      |     1    |      -     |
+| global.com  |     -      |     -    |      1     | 
+
+Note: Transaction #5 would replace the address for moniker created at Transaction #2 using LIFO retrieval.
   
-Note: Transaction #5 would replace the address for moniker created at Transaction #2.
-  
-### Colored Coin Mode Example
-Coming soon.
+### Token Mode Example
+To do...
 
 ### Resource & Entity Genisis IDs
 Identifiers for resources and entities will be implied to be the transaction hash associsted with the genisis of the resource or entity entry.  This will ensure unique ID generation and also elliminate the need to explicitly provide an ID within the OP_RETURN space when generating new resources or entities. If a name, address, or moniker fields are provided within the associated entity's genisis then the GUI may display the name, address, or moniker instead of the entity's transaction hash.  Likewise, if the name field is provided for the associted resource's genisis the GUI may display the name of the resource instead of the resource's genisis transaction hash.
@@ -138,10 +144,7 @@ SLP defines voiding of resource transfers and renaming of entities and resources
 Any ledger utilizing a particular SLP version can change to another SLP version by simply using the LEDGER command again with the desired version specified.  Since the blockchain economics and protocol capabilities will change over time it will be important to be able to switch to a different SLP version.  For example, if many ledger entries are being made through an API then transactions may be expensive so a much less verbose SLP protocol will be desired to reduce cost.  Another scenario may be that one protocol version may have more features than another.  
 
 ### Timestamps
-A transaction or transfer of resources that happens in the real world will likely occur at a different time from when the associated ledger entry is made on the blockchain.  For this reason, an optional timestamp field can be included for TRANSFER entries.  
-
-### Multiple OP_RETURN Spaces
-Multiple outputs with OP_RETURN included in their script provides additional data storage.  The protocol will utilize multiple transaction output in some cases as appropriate.
+A transaction or transfer of resources that happens in the real world will likely occur at a different time from when the associated ledger entry is made on the blockchain.  For this reason, an optional timestamp field can be included for TRANSFER entries.
 
 ### Simple Ledger Registry (http://simpleledger.cash)
 The SLP will eventually provide a public registry of unique monikers, each associated with a bitcoin cash address being used either as a SLP ledger or as a token holder.  This will make it easier to create SLP transactions by using the published SLP moniker instead of the full address.  It will be possible to change the bitcoin cash address associated with a unique moniker if required (e.g., if the private keys of an SLP address have been compromised).  Changing the bitcoin cash address will a special procedure for the registrant to follow in order to help guard against high jacking an SLP ledger's unique moniker.
@@ -166,26 +169,25 @@ For collision avoid and BCH blockchain explorers whom want to detect many OP_RET
 | RESOURCE              | rid=, qty=, eid=      | name=               | Create a new resource in the ledger with initial assignment and quantity allocation |
 | TRANSFER              | from=, to=, rid=, qty=| date=.              | Move an allocation of resource from one entity to another entity |
 | UPDATE                | type=, id=,           | name=, addr=, chain=| Update at least one of the optional arguments for an entity, resource, or the ledger |
-| MESSAGE               | msg=, eid=            |                     | Create a message to be sent to an entity's address, handled by a VSP.  VSP should provide confirmation response when complete. |
 | COMMENT               | msg=                  | txn=, chain=, replyto=| Create a generic comment about any transaction on any chain, can also reply to a previously made comment using chain's txn id |
-| PERMIT                | level=, addr=, chain= |                    | Specify access permissions to this ledger for an address on a particular chain (e.g. one or more VSPs on main chain or even an address from a virtual chain) |
 
 ### Commands and arguments used by a bitcoin address to interact with a VSP, to trigger SLP ledger entry
 | 8-byte Command Prefix | Required Arguments      | Optional Arguments  | Description                                        |
 |:---------------------:|:-----------------------:|:-------------------:|:---------------------------------------------------|
-| TRANSFER              | to=, qty=, chain=       | rid=                | Move an allocation of resource from one entity to another entity |
+| TRANSFER              | to=, qty=, for=         | rid=                | Move an allocation of resource from one entity to another entity |
 
 ### Argument requirements
 | Argument          | Type      | Encoding  | Bytes   | Representation                                                      |
 |:-----------------:|:---------:|:---------:|:-------:|:-------------------------------------------------------------------:|
 | slpver=           | number    |  byte     | 1 exact | representing up to 256 versions                                     |
-| registry=         | string    |  ascii    | 100 max | the url to a virtual blockchain registry                            |
+| registry=         | string    |  ascii    | 100 max | the url to a public SLP `moniker` registry                          |
 | date=             | number    |  bytes    | 4 exact | representing POSIX time manually set date stamp by user             |
 | eid=              | number    |  bytes    | TBD     | representing up to X possible entity ids in a single ledger         |
 | rid=              | number    |  bytes    | TBD     | representing up to X possible resource ids in a single ledger       |
 | qty=              | number    |  bytes    | TBD     | needs to be big enough to hold bitcoin number value                 |
 | name=, to=, from= | string    |  ascii    | 42 max  | large enough to hold a bitcoin cash address                         |
-| chain=            | string    |  ascii    | 42 max  | moniker or address for SLP ledger                                   |
+| for=              | string    |  ascii    | 42 max  | moniker or address for SLP ledger                                   |
+| ledger=           | string    |  ascii    | 42 max  | moniker or address for SLP ledger                                   |
 | addr=             | string    |  ascii    | 42 max  | blockchain address associated with the entity                       |
 | type=             | string    |  ascii    | 8 max   | can be one of: entity, resource, ledger                             |
 | level=            | TBD       |  TBD      | TBD     | permissions access level to SLP ledger can be one of: ...           |
@@ -205,8 +207,3 @@ For collision avoid and BCH blockchain explorers whom want to detect many OP_RET
 | chain=   | 636861696e3d    |     6      |
 | type=    | 747970653d      |     5      | 
 | level=   | 6c6576656c3d    |     6      |
-
-### Rules WIP
-1) After satisfying a validation service's join requirements for tracking and validating your address's ledger you should have a message received from that validation service to confirm your address is actively being validated by the service.  This is an optional step, but without joining a validation service your address will not be actively validated for errors and discrepancies.
-2) Your address must have a message to self with the protocol message of "LEDGER", where everything afterwards would be part of the ledger parsing
-
