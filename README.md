@@ -136,8 +136,8 @@ To do...
 ### Resource & Entity Genisis IDs
 Identifiers for resources and entities will be implied to be the transaction hash associsted with the genisis of the resource or entity entry.  This will ensure unique ID generation and also elliminate the need to explicitly provide an ID within the OP_RETURN space when generating new resources or entities. If a name, address, or moniker fields are provided within the associated entity's genisis then the GUI may display the name, address, or moniker instead of the entity's transaction hash.  Likewise, if the name field is provided for the associted resource's genisis the GUI may display the name of the resource instead of the resource's genisis transaction hash.
 
-### Privacy on a Public Blockchain using Encryption
-Encryption of fields containing sensitive name or quantity data (i.e., name=, qty= fields) is possible using a combination of asymmetric keys and symmetric keys.  This feature will allow someone to maintain an encrypted ledger with the ability to share only selected transaction data with third-parties using a passcode.  Everyone will be able to see the command, but the certain field data can be hidden with a password.
+### Encryption for Ledger Privacy And Provability
+When encryption is necessary (e.g., private company stock ledger), SLP messages will be signed prior to being encrypted with the ledger's public key. The signature for those unencrypted SLP messages will be stored with the encrypted SLP transaction.  This way integrity of the unencrypted SLP messages will be provable with the signature which is stored on the blockchain.  
 
 ### Edit and Renaming capabilities
 SLP defines voiding of resource transfers and renaming of entities and resources so that they can be displayed nicely in the ledger's current state.
