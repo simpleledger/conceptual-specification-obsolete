@@ -2,7 +2,7 @@
 
 ## NOTICE: The SLP Tokens Specification is currently being drafted [here](https://docs.google.com/document/d/1GcDGiVUEa87SIEjrvM9QcCINfoBw-R7EPWzNVR4M8EI/edit).  
 
-The below specification needs to be updated to reflect the technical approach of using a [directed acrylic graph](https://en.wikipedia.org/wiki/Directed_acyclic_graph) to keep track of ledger information in the various SLP types/modes.
+The following specification needs to be updated to reflect the technical approach of using a [directed acrylic graph](https://en.wikipedia.org/wiki/Directed_acyclic_graph) to keep track of ledger information in the various SLP types/modes.
 
 ## Overview
 
