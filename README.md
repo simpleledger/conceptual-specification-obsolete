@@ -1,5 +1,9 @@
 # Simple Ledger Protocol (SLP) Specification - Draft
 
+## NOTICE: The SLP Tokens Specification is currently being drafted [here](https://docs.google.com/document/d/1GcDGiVUEa87SIEjrvM9QcCINfoBw-R7EPWzNVR4M8EI/edit).  
+
+The below specification needs to be updated to reflect the technical approach of using a [directed acrylic graph](https://en.wikipedia.org/wiki/Directed_acyclic_graph) to keep track of ledger information in the various SLP types/modes.
+
 ## Overview
 
 This specification defines a protocol for using a single Bitcoin Cash address as a data storage device that can be used in a number of interesting modes and applications.  When SLP is used in `numerical` type modes, arbitrarily named quantifiable resources can be created and allocated between a number of named entities; these entities may also be represented by a bitcoin cash address.  When SLP is used in `label` type modes, uniquely named resources can be associated with one or more bitcoin cash addresses or transaction hashes.  In all SLP modes the ledger address is owned and managed by an single entity the holding the private keys for the ledger address.  Implementations would simply construct a ledger's current state by examining the series of a human-readable SLP payloads at a ledger's address.  Some additional modes are described (i.e., `lookup` and `token` modes) which would involve querying for data at the individual addresses listed within the ledger.
